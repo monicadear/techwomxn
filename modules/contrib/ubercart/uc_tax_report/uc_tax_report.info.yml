@@ -1,0 +1,14 @@
+name: 'Tax Report'
+type: module
+description: 'Provides a report of sales tax your customers paid.'
+package: Ubercart - core (optional)
+# core: 8.x
+dependencies:
+  - ubercart:uc_report
+  - ubercart:uc_tax
+
+# Information added by Drupal.org packaging script on 2019-03-10
+version: '8.x-4.0-alpha5+228-dev'
+core: '8.x'
+project: 'ubercart'
+datestamp: 1552182492

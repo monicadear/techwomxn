@@ -1,0 +1,13 @@
+name: 'Product Kit'
+type: module
+description: 'Provides a content type that groups two or more products together, allowing them to be purchased as a bundle with an optional discount.'
+package: Ubercart - extra
+# core: 8.x
+dependencies:
+  - ubercart:uc_product
+
+# Information added by Drupal.org packaging script on 2019-03-10
+version: '8.x-4.0-alpha5+228-dev'
+core: '8.x'
+project: 'ubercart'
+datestamp: 1552182492

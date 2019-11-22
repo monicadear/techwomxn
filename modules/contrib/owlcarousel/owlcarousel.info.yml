@@ -1,0 +1,13 @@
+name: owlcarousel
+type: module
+description: OWL Carousel
+# core: 8.x
+package: Owl Carousel
+dependencies:
+  - field
+  - image
+# Information added by Drupal.org packaging script on 2017-08-23
+version: '8.x-1.0-alpha1'
+core: '8.x'
+project: 'owlcarousel'
+datestamp: 1503465548

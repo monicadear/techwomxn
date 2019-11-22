@@ -1,0 +1,28 @@
+core: 8.x
+type: theme
+base theme: bootstrap
+
+name: 'TechWomxn'
+description: 'Uses the jsDelivr CDN for all CSS and JavaScript. No source files or compiling is necessary and is recommended for simple sites or beginners.'
+package: 'Bootstrap'
+
+regions:
+  top_header: 'Top Header'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  slider: 'Slider'
+  connect_resources: 'Connect Resources'
+  forums_left: 'Forums Left'
+  forums_right: 'Forums Right'
+  header: 'Top Bar'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  sidebar_first: 'Left Sidebar'
+  sidebar_second: 'Right Sidebar'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+libraries:
+  - 'techwomxn/global-styling'

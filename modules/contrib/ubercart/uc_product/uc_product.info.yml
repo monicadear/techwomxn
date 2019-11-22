@@ -1,0 +1,17 @@
+name: Product
+type: module
+description: 'REQUIRED. Provides content types to represent items in an online store.'
+package: Ubercart - core
+# core: 8.x
+dependencies:
+  - drupal:image
+  - drupal:path
+  - drupal:node
+  - ubercart:uc_store
+configure: uc_product.settings
+
+# Information added by Drupal.org packaging script on 2019-03-10
+version: '8.x-4.0-alpha5+228-dev'
+core: '8.x'
+project: 'ubercart'
+datestamp: 1552182492

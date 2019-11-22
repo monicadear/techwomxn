@@ -1,0 +1,317 @@
+img{
+    max-width: 100%;
+    height:auto;
+}
+a {
+    color: #7D2987;
+    text-decoration: none;
+}
+.text-white{
+    color:#FFF;
+}
+.margin-0{
+    margin:0;
+}
+.padding-0{
+    padding:0;
+}
+.relative{
+    position:relative;
+}
+.margin-bottom-10{
+    margin-bottom:10px;
+}
+.margin-bottom-25{
+    margin-bottom:25px;
+}
+.margin-bottom-45{
+    margin-bottom:45px;
+}
+.display-inline-block{
+    display:inline-block;
+}
+.btn{
+    border-radius:0;
+}
+.btn-default{
+    color:#FFF;
+    background:#7D2987;
+    border-color:#7D2987;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #93ca4d;
+    border-color: #93ca4d;
+}
+
+.btn-primary-signup {
+    color: #fff;
+    background-color: #93ca4d;
+    border-color: #93ca4d;
+    width: 15%;
+    margin: 0 auto;
+}
+
+.btn-primary-signup a {
+    color: #fff;
+    font-size: 2em;
+}
+
+
+a.name.navbar-brand {
+    display: none;
+}
+
+
+
+
+
+@media (max-width:320px) {
+
+.page-node-type-product .field--name-uc-product-image img {
+    width: 100%%;
+    height: 250px;
+    }
+
+}
+
+
+
+
+.frontpage_content {
+    position: absolute;
+    left: 0;
+    z-index: 99;
+    bottom: 0;
+    width: 100%;
+        padding:20px;
+        color:#FFF;
+        background:rgba(0, 0, 0, 0.65);
+}
+
+
+
+.frontpage_content a{
+    color:#FFF;
+    text-decoration:none;
+}
+
+
+.frontpage_image img{
+    width:100%;
+}
+
+.path-frontpage h1.page-header {
+    display: none;
+}
+
+.views_slideshow_controls_text a{
+    display:inline-block;
+    text-decoration:none;
+}
+.views_slideshow_controls_text .views_slideshow_controls_text_pause{
+    display:none;
+}
+.views_slideshow_controls_text span,
+.owl-theme .owl-controls .owl-buttons div{
+    position:absolute;
+    top:50%;
+    margin:-30px 0 0 0;
+    width:30px;
+    height:60px;
+    z-index:99;
+    font-size:0;
+    border-radius:0;
+    text-align:center;
+    background:rgba(9, 9, 9, 0.2);
+}
+
+
+
+
+@media only screen and (max-width: 600px) {
+
+#block-views-block-front-slideshow-block-1-2 {
+  display: block;
+      clear: both;
+  width: 95%;
+  height: 275px;
+  margin: 0 auto;
+  border: 3px solid red;
+}
+
+.view-id-front_slideshow .clearfix.frontpage_image  {
+  border: 3px solid purple;
+  display:inline-block;
+  margin: 0 auto 10px auto;
+  width: 20%;
+}
+
+
+.view-id-front_slideshow .frontpage_content {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    z-index: 99;
+    width: 20%;
+    max-height: 25%;
+    padding: 20px;
+    color: #FFF;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+}
+
+
+.owl-theme .owl-controls .owl-buttons .owl-prev,
+.views_slideshow_controls_text .views_slideshow_controls_text_previous{
+    left: 0;
+    width: 90px;
+    height: 60px;
+      background-image: url("/themes/techwomxn/images/prevbutton.png");
+  background-repeat: no-repeat;
+        background-position: left;
+
+}
+.owl-theme .owl-controls .owl-buttons .owl-next,
+.views_slideshow_controls_text .views_slideshow_controls_text_next{
+    right: 0;
+    width: 90px;
+    height: 60px;
+      background-image: url("/themes/techwomxn/images/nextbutton.png");
+  background-repeat: no-repeat;
+      background-position: right;
+}
+.owl-theme .owl-controls .owl-buttons div:after,
+.views_slideshow_controls_text span:after{
+    font-size:35px;
+    line-height:60px;
+    font-family:FontAwesome;
+}
+.owl-theme .owl-controls .owl-buttons .owl-prev:after,
+.views_slideshow_controls_text .views_slideshow_controls_text_previous:after{
+    /* content:"\f104"; */
+}
+.owl-theme .owl-controls .owl-buttons .owl-next:after,
+.views_slideshow_controls_text .views_slideshow_controls_text_next:after{
+    /* content:"\f105"; */
+}
+
+
+
+
+.path-frontpage h2.block-title {
+    color: #83328D;
+    text-align: center;
+}
+
+.field_weblink a{
+    color:#FFF;
+    padding:10px 15px;
+    background:#7D2987;
+    text-decoration:none;
+    display:inline-block;
+}
+
+#block-views-block-highlighted-box-block-1 {
+    margin: 0 auto;
+}
+
+.view-highlighted-box .views-row .field_display_image{
+    transition:all 0.4s linear;
+    overflow:hidden;
+}
+.view-highlighted-box .views-row .field_display_image img{
+    -webkit-transition:all 0.4s linear;
+    -moz-transition:all 0.4s linear;
+    -o-transition:all 0.4s linear;
+    -ms-transition:all 0.4s linear;
+    transition:all 0.4s linear;
+}
+.view-highlighted-box .views-row .field_display_image:hover img{
+    -webkit-transform:scale(1.2,1.2) rotate(10deg);
+    -moz-transform:scale(1.2,1.2) rotate(10deg);
+    -o-transform:scale(1.2,1.2) rotate(10deg);
+    -ms-transform:scale(1.2,1.2) rotate(10deg);
+    transform:scale(1.2,1.2) rotate(10deg);
+}
+.view-highlighted-box .views-row .field_display_image .field_weblink{
+    position:absolute;
+    right:5px;
+    bottom:5px;
+}
+.view-highlighted-box .views-row .field_display_image .field_weblink a{
+    background:rgba(125, 41, 135, 0.7);
+}
+
+/* Whats New */
+#block-views-block-whats-new-block-1 {
+    width: 80%;
+    margin: 0 auto;
+}
+
+td.views-field.views-field-field-start-date {
+    width: 20%;
+}
+
+td.views-field.views-field-title.views-field-body {
+    width: 55%;
+}
+
+
+
+.contact-message-feedback-form {
+    padding:15px;
+    border-top:5px solid #872e92;
+    box-shadow:0 0 10px #CCC;
+}
+
+
+
+/* Business Directory */
+.path-business-directory td.views-field.views-field-title {
+    width: 20%;
+}
+
+.path-business-directory td.views-field.views-field-field-phone-number {
+    width: 10%;
+}
+
+
+.page-node-type-resources .field--label {
+    font-weight: bold;
+    float: left;
+    padding: 10px 10px 10px 0;
+    margin: 15px 10px 0 0;
+    clear: both;
+}
+
+/* Betatesting Menu topmost right */
+#block-betatesting {
+    float: right;
+    text-align: right;
+    width: 30%;
+}
+
+
+/* PRODUCT PAGES IMAGE */
+.field--name-uc-product-image {
+    float: left;
+    margin-right: 25px;
+}
+
+
+.footer{
+    padding:30px 0;
+    margin-top:30px;
+    background:#333;
+}
+.contact-message-feedback-form .form-actions{
+    margin-bottom:0;
+}
+.form-control{
+    border-radius:0;
+}
+.location-title{
+    font-size:20px;
+}

@@ -1,0 +1,13 @@
+name: 'Product Attributes'
+type: module
+description: 'Extends product content types to support product variations that customers may select before purchase.'
+package: Ubercart - core (optional)
+# core: 8.x
+dependencies:
+  - ubercart:uc_product
+
+# Information added by Drupal.org packaging script on 2019-03-10
+version: '8.x-4.0-alpha5+228-dev'
+core: '8.x'
+project: 'ubercart'
+datestamp: 1552182492
