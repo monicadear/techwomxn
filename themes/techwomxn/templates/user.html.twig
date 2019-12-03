@@ -1,0 +1,77 @@
+{#
+/**
+ * @file
+ * Theme override to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'. Fields attached to a user
+ *   such as 'user_picture' are available as 'content.user_picture'.
+ * - attributes: HTML attributes for the container element.
+ * - user: A Drupal User entity.
+ *
+ * @see template_preprocess_user()
+ */
+#}
+
+
+<article{{ attributes.addClass('profile custom_user_profile') }}>
+	{% if content %}
+		<div class="row">
+				<div class="col-md-5 margin-bottom-25">
+					<div class="row displayname">
+						<div class="col-sm-4"><label>Posting as: </label></div>
+						<div class="col-sm-8"> {{ user.displayname }} </div>
+					</div>
+				<div class="row field_member_for">
+						<div class="col-sm-4"><label>Member Since: </label></div>
+						<div class="col-sm-8"> 
+            {{ user.getCreatedTime|format_date('month_year') }}
+           </div>
+					</div>
+					<div class="row margin-bottom-25 field_titleposition">
+						<div class="col-sm-4"><label>Title: </label></div>
+						<div class="col-sm-8"> {{- content.field_title_position -}} </div>
+					</div>
+					<div class="row field_organization">
+						<div class="col-sm-4"><label>Organization </label></div>
+						<div class="col-sm-8">{{- content.field_organization -}} </div>
+					</div>
+				</div>
+				<div class="col-md-5 margin-bottom-25">
+					<div class="margin-bottom-25 clearfix field_about_me">
+						<div class="clearfix contact-me"><label>Bio : </label></div>
+						{{- content.field_bio -}}
+					</div>
+					
+					<div class="clearfix contact-me"><label>Contact me : </label></div>
+
+
+					// Link to a specific user profile page:
+					<a href="{{ path('entity.user.canonical', {'user': user.id}) }}">{{ 'View user profile'|t }}</a>
+
+
+					{% if content.field_website[0].value %}
+						<div class="clearfix"><a href="{{ content.field_website[0]['#url'] }}" target="_blank" title="Website">Website</a></div>
+					{% endif %}
+					
+
+					{% if content.field_linkedin[0].value %}
+						<div class="clearfix"><a href="{{ content.field_linkedin[0]['#url'] }}" target="_blank" title="linkedin">Linkedin</a></div>
+					{% endif %}
+
+
+					{% if content.field_twitter[0].value %}
+						<div class="clearfix margin-bottom-25"><a href="{{ content.field_twitter[0]['#url'] }}" target="_blank" title="Twitter">Twitter</a></div>
+					{% endif %}
+          
+				</div>
+				<div class="col-md-2 margin-bottom-25 custom_user_profile_pic">
+					<div class="margin-bottom-15 clearfix"> {{ content.user_picture }} </div>
+				</div>
+		</div>
+	{% endif %}
+</article>

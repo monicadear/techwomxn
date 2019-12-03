@@ -51,6 +51,9 @@
  * @see html.html.twig
  */
 #}
+
+
+
 <div class="clearfix page">
 
   {# Top Header #}
@@ -135,9 +138,9 @@
           {# Content #}
           {%
             set content_classes = [
-              page.sidebar_first and page.sidebar_second ? 'col-sm-6',
-              page.sidebar_first and page.sidebar_second is empty ? 'col-sm-9',
-              page.sidebar_second and page.sidebar_first is empty ? 'col-sm-9',
+              page.sidebar_first and page.sidebar_second ? 'col-sm-12',
+              page.sidebar_first and page.sidebar_second is empty ? 'col-sm-12',
+              page.sidebar_second and page.sidebar_first is empty ? 'col-sm-12',
               page.sidebar_first is empty and page.sidebar_second is empty ? 'col-sm-12'
             ]
           %}
@@ -176,7 +179,24 @@
         <div class="{{ container }}">
           {{ page.footer }}
         </div>
+
       </footer>
     {% endblock %}
   {% endif %}
+
+
+
+  {% if page.bottomfooter %}
+    {% block bottomfooter %}
+        <div class="clearfix footer text-center" id="bottomfooter">
+          {{ page.bottomfooter }}
+        </div>
+    {% endblock %}
+  {% endif %}
+
+
+
+
+
+
 </div>

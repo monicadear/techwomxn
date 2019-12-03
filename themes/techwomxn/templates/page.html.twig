@@ -51,6 +51,7 @@
  * @see html.html.twig
  */
 #}
+
 <div class="clearfix page">
 
   {# Top Header #}
@@ -168,6 +169,12 @@
             {% block sidebar_second %}
               <aside class="col-sm-3" role="complementary">
                 {{ page.sidebar_second }}
+
+
+<br />
+
+<a class="twitter-timeline" href="https://twitter.com/techwomxn1?ref_src=twsrc%5Etfw">Tweets by techwomxn1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
               </aside>
             {% endblock %}
           {% endif %}
@@ -183,7 +190,24 @@
         <div class="{{ container }}">
           {{ page.footer }}
         </div>
+
       </footer>
     {% endblock %}
   {% endif %}
+
+
+
+  {% if page.bottomfooter %}
+    {% block bottomfooter %}
+        <div class="clearfix footer text-center" id="bottomfooter">
+          {{ page.bottomfooter }}
+        </div>
+    {% endblock %}
+  {% endif %}
+
+
+
+
+
+
 </div>
