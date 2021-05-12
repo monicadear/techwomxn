@@ -10,13 +10,20 @@ use Drupal\uc_tax\Entity\TaxRate;
  */
 abstract class TaxTestBase extends UbercartBrowserTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'uc_cart',
     'uc_payment',
     'uc_payment_pack',
     'uc_tax',
   ];
-  public static $adminPermissions = [/*'administer rules', */'administer taxes'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   /**
    * {@inheritdoc}

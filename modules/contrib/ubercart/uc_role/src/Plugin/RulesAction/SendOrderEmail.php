@@ -12,7 +12,7 @@ use Drupal\uc_order\Plugin\RulesAction\EmailActionBase;
  *   id = "uc_role_order_email",
  *   label = @Translation("Send an order email regarding roles"),
  *   category = @Translation("Notification"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

@@ -11,7 +11,7 @@ use Drupal\uc_order\OrderInterface;
  *   id = "uc_order_email",
  *   label = @Translation("Send an order email"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

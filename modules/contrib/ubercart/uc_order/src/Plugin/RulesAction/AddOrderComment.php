@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "uc_order_action_add_comment",
  *   label = @Translation("Add a comment to the order"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

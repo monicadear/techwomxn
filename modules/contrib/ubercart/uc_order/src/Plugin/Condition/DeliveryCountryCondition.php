@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "uc_order_condition_delivery_country",
  *   label = @Translation("Check an order's shipping country"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

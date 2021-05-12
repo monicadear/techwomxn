@@ -17,7 +17,7 @@ abstract class CartEventTestBase extends EventTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Must enable our module to make our plugins discoverable.
@@ -30,7 +30,8 @@ abstract class CartEventTestBase extends EventTestBase {
       ->willReturn(['uc_cart' => __DIR__ . '/../../../../../']);
 
     // Create a real plugin manager with a mock moduleHandler.
-    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal());
+    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal(), $this->entityTypeBundleInfo->reveal());
+
   }
 
 }

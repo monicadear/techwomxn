@@ -11,8 +11,15 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
  */
 class StockTest extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_stock'];
-  public static $adminPermissions = ['administer product stock'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_stock'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = ['administer product stock'];
 
   /**
    * {@inheritdoc}

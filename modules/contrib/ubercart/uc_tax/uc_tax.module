@@ -164,7 +164,8 @@ function uc_tax_node_type_update(EntityInterface $info) {
   $original_id = $info->getOriginalId();
   $existing_type = !empty($original_id) ? $info->getOriginalId() : $info->getEntityTypeId();
 
-  db_update('uc_tax_taxed_product_types')
+  $connection = \Drupal::database();
+  $connection->update('uc_tax_taxed_product_types')
     ->fields([
       'type' => $info->getEntityTypeId(),
     ])
@@ -205,6 +206,8 @@ function _uc_tax_to_line_item($tax) {
  *   The saved tax rate object including the rate ID for new rates.
  */
 function uc_tax_rate_save($rate, $reset = TRUE) {
+  $connection = \Drupal::database();
+
   $fields = [
     'name' => $rate->name,
     'rate' => $rate->rate,
@@ -215,26 +218,26 @@ function uc_tax_rate_save($rate, $reset = TRUE) {
   ];
 
   if (isset($rate->id)) {
-    db_merge('uc_tax')
+    $connection->merge('uc_tax')
       ->key('id', $rate->id)
       ->fields($fields)
       ->execute();
   }
   else {
-    $rate->id = db_insert('uc_tax')
+    $rate->id = $connection->insert('uc_tax')
       ->fields($fields)
       ->execute();
   }
 
-  db_delete('uc_tax_taxed_product_types')
+  $connection->delete('uc_tax_taxed_product_types')
     ->condition('tax_id', $rate->id)
     ->execute();
-  db_delete('uc_tax_taxed_line_items')
+  $connection->delete('uc_tax_taxed_line_items')
     ->condition('tax_id', $rate->id)
     ->execute();
 
-  $p_insert = db_insert('uc_tax_taxed_product_types')->fields(['tax_id', 'type']);
-  $l_insert = db_insert('uc_tax_taxed_line_items')->fields(['tax_id', 'type']);
+  $p_insert = $connection->insert('uc_tax_taxed_product_types')->fields(['tax_id', 'type']);
+  $l_insert = $connection->insert('uc_tax_taxed_line_items')->fields(['tax_id', 'type']);
 
   foreach ($rate->taxed_product_types as $type) {
     $p_insert->values([
@@ -331,7 +334,8 @@ function uc_tax_rate_load($rate_id = NULL) {
   // If the rates have not been cached yet...
   if (empty($rates)) {
     // Get all the rate data from the database.
-    $result = db_query('SELECT id, name, rate, shippable, weight, display_include, inclusion_text FROM {uc_tax} ORDER BY weight');
+    $connection = \Drupal::database();
+    $result = $connection->query('SELECT id, name, rate, shippable, weight, display_include, inclusion_text FROM {uc_tax} ORDER BY weight');
 
     // Loop through each returned row.
     foreach ($result as $rate) {
@@ -344,7 +348,7 @@ function uc_tax_rate_load($rate_id = NULL) {
     }
 
     foreach (['taxed_product_types', 'taxed_line_items'] as $field) {
-      $result = db_select('uc_tax_' . $field, 't')->fields('t', ['tax_id', 'type'])->execute();
+      $result = $connection->select('uc_tax_' . $field, 't')->fields('t', ['tax_id', 'type'])->execute();
       foreach ($result as $record) {
         $rates[$record->tax_id]->{$field}[] = $record->type;
       }
@@ -369,15 +373,16 @@ function uc_tax_rate_load($rate_id = NULL) {
  */
 function uc_tax_rate_delete($rate_id) {
   // Delete the tax rate record.
-  db_delete('uc_tax')
+  $connection = \Drupal::database();
+  $connection->delete('uc_tax')
     ->condition('id', $rate_id)
     ->execute();
 
-  db_delete('uc_tax_taxed_product_types')
+  $connection->delete('uc_tax_taxed_product_types')
     ->condition('tax_id', $rate_id)
     ->execute();
 
-  db_delete('uc_tax_taxed_line_items')
+  $connection->delete('uc_tax_taxed_line_items')
     ->condition('tax_id', $rate_id)
     ->execute();
 

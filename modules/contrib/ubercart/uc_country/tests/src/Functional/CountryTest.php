@@ -11,7 +11,10 @@ use Drupal\Tests\BrowserTestBase;
  */
 class CountryTest extends BrowserTestBase {
 
-  public static $modules = ['uc_country', 'uc_store'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_country', 'uc_store'];
 
   /**
    * Test enable/disable of countries.

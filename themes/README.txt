@@ -1,6 +1,10 @@
 Themes allow you to change the look and feel of your Drupal site. You can use
 themes contributed by others or create your own.
 
+
+UPDATEE BLOCK MODULE:
+https://www.drupal.org/files/issues/2018-07-19/enable-block-visibility-user-role-negation-2986958-2.patch
+
 WHAT TO PLACE IN THIS DIRECTORY?
 --------------------------------
 

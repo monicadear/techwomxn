@@ -101,6 +101,8 @@ function uc_catalog_preprocess_block(&$variables) {
  * listed in the catalog.
  */
 function uc_catalog_uc_store_status() {
+  $connection = \Drupal::database();
+
   $field = FieldStorageConfig::loadByName('node', 'taxonomy_catalog');
   if (!$field) {
     return [[
@@ -124,11 +126,11 @@ function uc_catalog_uc_store_status() {
 
       $product_types = uc_product_types();
       $types = array_intersect($product_types, $field->getBundles());
-      $result = db_query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types[]) AND ti.tid IS NULL AND td.vid = :vid", [':types[]' => $types, ':vid' => $catalog->id()]);
+      $result = $connection->query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types[]) AND ti.tid IS NULL AND td.vid = :vid", [':types[]' => $types, ':vid' => $catalog->id()]);
       if ($excluded = $result->fetchField()) {
         $description = \Drupal::translation()->formatPlural($excluded, 'There is 1 product not listed in the catalog.', 'There are @count products not listed in the catalog.')
           . t('Products are listed by assigning a category from the <a href=":cat_url">Product Catalog</a> vocabulary to them.', [':cat_url' => Url::fromRoute('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->machine_name])->toString()]);
-        $terms = db_query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", [':vid' => $catalog->id()])->fetchField();
+        $terms = $connection->query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", [':vid' => $catalog->id()])->fetchField();
         if ($terms) {
           $description .= ' ' . Link::createFromRoute(t('Find orphaned products here.'), 'uc_product.orphans')->toString();
         }

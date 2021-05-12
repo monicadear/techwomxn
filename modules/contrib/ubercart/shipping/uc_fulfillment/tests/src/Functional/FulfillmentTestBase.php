@@ -11,12 +11,19 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
 abstract class FulfillmentTestBase extends UbercartBrowserTestBase {
   use FulfillmentTestTrait;
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'uc_payment',
     'uc_payment_pack',
     'uc_fulfillment',
   ];
-  public static $adminPermissions = ['fulfill orders'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = ['fulfill orders'];
 
   /**
    * {@inheritdoc}

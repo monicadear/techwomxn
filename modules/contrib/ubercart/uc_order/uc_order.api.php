@@ -194,7 +194,8 @@ function hook_uc_order_product_update(OrderProductInterface $order_product) {
  * @see hook_uc_order_edit_form_product_remove()
  */
 function hook_uc_order_product_delete(OrderProductInterface $order_product) {
-  db_delete('mytable')
+  $connection = \Drupal::database();
+  $connection->delete('mytable')
     ->condition('opid', entity_id('uc_order_product', $order_product))
     ->execute();
 }

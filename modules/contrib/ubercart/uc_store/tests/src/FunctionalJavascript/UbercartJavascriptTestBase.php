@@ -25,11 +25,9 @@ abstract class UbercartJavascriptTestBase extends JavascriptTestBase {
   protected $profile = 'testing';
 
   /**
-   * The standard modules to be loaded for all tests.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['block', 'uc_cart'];
+  protected static $modules = ['block', 'uc_cart'];
 
   /**
    * Don't check for or validate config schema.
@@ -50,7 +48,7 @@ abstract class UbercartJavascriptTestBase extends JavascriptTestBase {
    *
    * @var string[]
    */
-  public static $adminPermissions = [
+  protected static $adminPermissions = [
     'access administration pages',
     'access content',
     'administer store',

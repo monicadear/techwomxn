@@ -12,7 +12,7 @@ use Drupal\uc_order\OrderInterface;
  *   label = @Translation("Check an order's total weight"),
  *   description = @Translation("Compare the weight of all of the products, or the weight of just one type in the order."),
  *   category = @Translation("Order: Product"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

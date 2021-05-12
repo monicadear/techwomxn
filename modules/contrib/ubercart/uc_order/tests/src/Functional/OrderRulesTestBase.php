@@ -19,11 +19,9 @@ abstract class OrderRulesTestBase extends BrowserTestBase {
   protected $profile = 'testing';
 
   /**
-   * Additional modules required.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_order', 'rules'];
+  protected static $modules = ['uc_order', 'rules'];
 
   /**
    * Don't check for or validate config schema.

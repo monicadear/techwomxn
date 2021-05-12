@@ -72,10 +72,11 @@ function uc_file_user_cancel($edit, $account, $method) {
  */
 function uc_file_user_view(array &$build, AccountInterface $account, EntityViewDisplayInterface $display, $view_mode) {
   $user = \Drupal::currentUser();
+  $connection = \Drupal::database();
 
   // If user has files and permission to view them, put a link
   // on the user's profile.
-  $existing_download = db_query('SELECT fid FROM {uc_file_users} WHERE uid = :uid', [':uid' => $account->id()])->fetchField();
+  $existing_download = $connection->query('SELECT fid FROM {uc_file_users} WHERE uid = :uid', [':uid' => $account->id()])->fetchField();
   $existing_download = TRUE;
   if ($view_mode == 'full' &&
       $existing_download &&
@@ -104,15 +105,15 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
   }
 
   $user = \Drupal::currentUser();
+  $connection = \Drupal::database();
 
   // Get all the files on this product.
-  $product_features = db_query("SELECT * FROM {uc_product_features} upf " .
+  $product_features = $connection->query("SELECT * FROM {uc_product_features} upf " .
     "INNER JOIN {uc_file_products} ufp ON upf.pfid = ufp.pfid " .
     "INNER JOIN {uc_files} uf ON ufp.fid = uf.fid " .
     "WHERE upf.nid = :nid", [':nid' => $nid]);
 
   foreach ($product_features as $product_feature) {
-
     // Match up models...
     if (!empty($product_feature->model) && isset($data['model']) && $product_feature->model != $data['model']) {
       continue;
@@ -166,7 +167,8 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
  */
 function uc_file_uc_order_product_can_ship($product) {
   // Check if this model is shippable as well as a file.
-  $files = db_query('SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid', [':nid' => $product->nid->target_id]);
+  $connection = \Drupal::database();
+  $files = $connection->query('SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid', [':nid' => $product->nid->target_id]);
   foreach ($files as $file) {
 
     // If the model is 'any' then return.
@@ -228,7 +230,8 @@ function uc_file_uc_store_status() {
  *   An Ubercart product feature ID.
  */
 function uc_file_feature_delete($pfid) {
-  db_delete('uc_file_products')
+  $connection = \Drupal::database();
+  $connection->delete('uc_file_products')
     ->condition('pfid', $pfid)
     ->execute();
 }
@@ -237,7 +240,8 @@ function uc_file_feature_delete($pfid) {
  * Gets a file_product id from a product feature id.
  */
 function _uc_file_get_fpid($pfid) {
-  return db_query("SELECT fpid FROM {uc_file_products} WHERE pfid = :pfid", [':pfid' => $pfid])->fetchField();
+  $connection = \Drupal::database();
+  return $connection->query("SELECT fpid FROM {uc_file_products} WHERE pfid = :pfid", [':pfid' => $pfid])->fetchField();
 }
 
 /**
@@ -365,7 +369,8 @@ function _uc_file_expiration_date(array $file_limits, $timestamp) {
  * Removes all downloadable files, as well as their associations.
  */
 function uc_file_empty() {
-  $files = db_query('SELECT * FROM {uc_files}');
+  $connection = \Drupal::database();
+  $files = $connection->query('SELECT * FROM {uc_files}');
   foreach ($files as $file) {
     _uc_file_prune_db($file->fid);
   }
@@ -375,23 +380,25 @@ function uc_file_empty() {
  * Removes all db entries associated with a given $fid.
  */
 function _uc_file_prune_db($fid) {
-  $pfids = db_query('SELECT pfid FROM {uc_file_products} WHERE fid = :fid', [':fid' => $fid]);
+  $connection = \Drupal::database();
+  $pfids = $connection->query('SELECT pfid FROM {uc_file_products} WHERE fid = :fid', [':fid' => $fid]);
+  $connection = \Drupal::database();
   while ($pfid = $pfids->fetchField()) {
-    db_delete('uc_product_features')
+    $connection->delete('uc_product_features')
       ->condition('pfid', $pfid)
       ->condition('fid', 'file')
       ->execute();
 
-    db_delete('uc_file_products')
+    $connection->delete('uc_file_products')
       ->condition('pfid', $pfid)
       ->execute();
   }
 
-  db_delete('uc_file_users')
+  $connection->delete('uc_file_users')
     ->condition('fid', $fid)
     ->execute();
 
-  db_delete('uc_files')
+  $connection->delete('uc_files')
     ->condition('fid', $fid)
     ->execute();
 }
@@ -400,7 +407,8 @@ function _uc_file_prune_db($fid) {
  * Removes non-existent files.
  */
 function _uc_file_prune_files() {
-  $files = db_query('SELECT * FROM {uc_files}');
+  $connection = \Drupal::database();
+  $files = $connection->query('SELECT * FROM {uc_files}');
   foreach ($files as $file) {
     $filename = uc_file_qualify_file($file->filename);
 
@@ -428,21 +436,21 @@ function _uc_file_gather_files() {
   $files = file_scan_directory($dir, $file_config->get('file_mask'));
   $dir = (substr($dir, -1) != '/' || substr($dir, -1) != '\\') ? $dir . '/' : $dir;
 
+  $connection = \Drupal::database();
   foreach ($files as $file) {
-
     // Cut the base directory out of the path.
     $filename = str_replace($dir, '', $file->uri);
     $file_dir = dirname($filename);
     $fid = NULL;
 
     // Insert new entries.
-    if ($file_dir != '.' && !db_query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $file_dir . '/'])->fetchField()) {
-      $fid = db_insert('uc_files')
+    if ($file_dir != '.' && !$connection->query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $file_dir . '/'])->fetchField()) {
+      $fid = $connection->insert('uc_files')
         ->fields(['filename' => $file_dir . '/'])
         ->execute();
     }
-    if (!db_query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchField()) {
-      $fid = db_insert('uc_files')
+    if (!$connection->query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchField()) {
+      $fid = $connection->insert('uc_files')
         ->fields(['filename' => $filename])
         ->execute();
     }
@@ -493,13 +501,13 @@ function uc_file_remove_by_id($fid, $recur) {
 
   // Gather file(s) and sort in descending order. We do this
   // to ensure we don't try to remove a directory before it's empty.
+  $connection = \Drupal::database();
   $fids = _uc_file_sort_fids(_uc_file_get_dir_file_ids($fid, $recur));
   foreach ($fids as $fid) {
-
     $remove_fields = FALSE;
 
     // Qualify the path for I/O, and delete the files/dirs.
-    $filename = db_query('SELECT filename FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchField();
+    $filename = $connection->query('SELECT filename FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchField();
     $dir = uc_file_qualify_file($filename);
     if (is_dir($dir)) {
 
@@ -556,6 +564,7 @@ function uc_file_remove_by_id($fid, $recur) {
  */
 function _uc_file_get_dir_file_ids($fids, $recursive = FALSE) {
   $result = [];
+  $connection = \Drupal::database();
 
   // Handle an array or just a single.
   if (!is_array($fids)) {
@@ -570,7 +579,7 @@ function _uc_file_get_dir_file_ids($fids, $recursive = FALSE) {
     }
 
     $base_name = $base->filename . (is_dir(uc_file_qualify_file($base->filename)) ? '%' : '');
-    $files = db_query('SELECT * FROM {uc_files} WHERE filename LIKE :name', [':name' => $base_name]);
+    $files = $connection->query('SELECT * FROM {uc_files} WHERE filename LIKE :name', [':name' => $base_name]);
 
     // PHP str_replace() can't replace only N matches, so we use regex. First
     // we escape our file slashes, though, ... using str_replace().
@@ -698,7 +707,8 @@ function uc_file_qualify_file($filename) {
  *   A Drupal user ID.
  */
 function uc_file_remove_user($user) {
-  $query = db_delete('uc_file_users')
+  $connection = \Drupal::database();
+  $query = $connection->delete('uc_file_users')
     ->condition('uid', $user->id());
 
   // Echo the deletion only if something was actually deleted.
@@ -721,7 +731,8 @@ function uc_file_remove_user($user) {
  */
 function uc_file_remove_user_file_by_id($user, $fid) {
   $file = uc_file_get_by_id($fid);
-  $query = db_delete('uc_file_users')
+  $connection = \Drupal::database();
+  $query = $connection->delete('uc_file_users')
     ->condition('uid', $user->id())
     ->condition('fid', $fid);
 
@@ -764,9 +775,10 @@ function _uc_file_flush_cache() {
  */
 function &uc_file_get_by_name($filename) {
   $cache = _uc_file_get_cache();
+  $connection = \Drupal::database();
 
   if (!isset($cache[$filename])) {
-    $cache[$filename] = db_query('SELECT * FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchObject();
+    $cache[$filename] = $connection->query('SELECT * FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchObject();
   }
 
   return $cache[$filename];
@@ -783,9 +795,10 @@ function &uc_file_get_by_name($filename) {
  */
 function &uc_file_get_by_id($fid) {
   $cache = _uc_file_get_cache();
+  $connection = \Drupal::database();
 
   if (!isset($cache[$fid])) {
-    $cache[$fid] = db_query('SELECT * FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchObject();
+    $cache[$fid] = $connection->query('SELECT * FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchObject();
   }
 
   return $cache[$fid];
@@ -802,9 +815,10 @@ function &uc_file_get_by_id($fid) {
  */
 function &uc_file_get_by_key($key) {
   $cache = _uc_file_get_cache();
+  $connection = \Drupal::database();
 
   if (!isset($cache[$key])) {
-    $cache[$key] = db_query("SELECT * FROM {uc_file_users} ufu " .
+    $cache[$key] = $connection->query("SELECT * FROM {uc_file_users} ufu " .
       "LEFT JOIN {uc_files} uf ON uf.fid = ufu.fid " .
       "WHERE ufu.file_key = :key", [':key' => $key])->fetchObject();
     $cache[$key]->addresses = unserialize($cache[$key]->addresses);
@@ -826,9 +840,10 @@ function &uc_file_get_by_key($key) {
  */
 function &uc_file_get_by_uid($uid, $fid) {
   $cache = _uc_file_get_cache();
+  $connection = \Drupal::database();
 
   if (!isset($cache[$uid][$fid])) {
-    $cache[$uid][$fid] = db_query("SELECT * FROM {uc_file_users} ufu " .
+    $cache[$uid][$fid] = $connection->query("SELECT * FROM {uc_file_users} ufu " .
       "LEFT JOIN {uc_files} uf ON uf.fid = ufu.fid " .
       "WHERE ufu.fid = :fid AND ufu.uid = :uid", [':uid' => $uid, ':fid' => $fid])->fetchObject();
     if ($cache[$uid][$fid]) {
@@ -867,6 +882,7 @@ function &uc_file_get_by_uid($uid, $fid) {
  */
 function uc_file_user_renew($fid, AccountInterface $user, $pfid, $file_limits, $force_overwrite) {
   $result = [];
+  $connection = \Drupal::database();
 
   // Data shared between all files passed.
   $user_file_global = [
@@ -878,7 +894,6 @@ function uc_file_user_renew($fid, AccountInterface $user, $pfid, $file_limits, $
   $fids = _uc_file_get_dir_file_ids($fid, TRUE);
 
   foreach ($fids as $fid) {
-
     $file_user = _uc_file_user_get($user, $fid);
 
     // Doesn't exist yet?
@@ -914,7 +929,7 @@ function uc_file_user_renew($fid, AccountInterface $user, $pfid, $file_limits, $
 
     unset($file_user['filename']);
     // Insert or update (if $key is already in table) uc_file_users table.
-    db_merge('uc_file_users')
+    $connection->merge('uc_file_users')
       ->key(['fuid' => $key])
       ->fields($file_user)
       ->execute();
@@ -936,7 +951,8 @@ function uc_file_user_renew($fid, AccountInterface $user, $pfid, $file_limits, $
  * Retrieves a file_user object by user and fid.
  */
 function _uc_file_user_get(AccountInterface $user, $fid) {
-  $file_user = db_query('SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid', [':uid' => $user->id(), ':fid' => $fid])->fetchObject();
+  $connection = \Drupal::database();
+  $file_user = $connection->query('SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid', [':uid' => $user->id(), ':fid' => $fid])->fetchObject();
 
   if ($file_user) {
     $file_user->addresses = unserialize($file_user->addresses);

@@ -19,7 +19,7 @@ class ShipmentSaveEventTest extends EventTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Must enable our module to make our plugins discoverable.
@@ -32,7 +32,7 @@ class ShipmentSaveEventTest extends EventTestBase {
       ->willReturn(['uc_fulfillment' => __DIR__ . '/../../../../../']);
 
     // Create a real plugin manager with a mock moduleHandler.
-    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal());
+    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal(), $this->entityTypeBundleInfo->reveal());
   }
 
   /**

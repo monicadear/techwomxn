@@ -11,7 +11,7 @@ use Drupal\uc_order\OrderInterface;
  *   id = "uc_order_condition_count_products",
  *   label = @Translation("Check an order's number of products"),
  *   category = @Translation("Order: Product"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

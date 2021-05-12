@@ -70,13 +70,6 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return [];
   }

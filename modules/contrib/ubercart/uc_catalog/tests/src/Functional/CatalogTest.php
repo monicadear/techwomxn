@@ -9,8 +9,20 @@ namespace Drupal\Tests\uc_catalog\Functional;
  */
 class CatalogTest extends CatalogTestBase {
 
-  public static $modules = ['history', 'uc_catalog', 'uc_attribute', 'field_ui'];
-  public static $adminPermissions = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'history',
+    'uc_catalog',
+    'uc_attribute',
+    'field_ui',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'administer catalog',
     'administer node fields',
     'administer taxonomy_term fields',

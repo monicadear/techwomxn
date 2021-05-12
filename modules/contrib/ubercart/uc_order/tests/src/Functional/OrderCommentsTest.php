@@ -14,11 +14,9 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
 class OrderCommentsTest extends UbercartBrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_order', 'views'];
+  protected static $modules = ['uc_order', 'views'];
 
   /**
    * The user who placed the order.

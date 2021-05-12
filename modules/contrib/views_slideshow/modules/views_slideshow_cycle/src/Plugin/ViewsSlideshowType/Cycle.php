@@ -61,8 +61,8 @@ class Cycle extends ViewsSlideshowTypeBase {
         'nowrap' => ['default' => 0],
         'fixed_height' => ['default' => 1],
         'items_per_slide' => ['default' => 1],
-        'items_per_slide_first' => array('default' => FALSE),
-        'items_per_slide_first_number' => array('default' => 1),
+        'items_per_slide_first' => ['default' => FALSE],
+        'items_per_slide_first_number' => ['default' => 1],
         'wait_for_image_load' => ['default' => 1],
         'wait_for_image_load_timeout' => ['default' => 3000],
 
@@ -83,11 +83,11 @@ class Cycle extends ViewsSlideshowTypeBase {
     $cycle = \Drupal::service('library.discovery')->getLibraryByName('views_slideshow_cycle', 'jquery_cycle');
     if (!isset($cycle['js'][0]['data']) || !file_exists($cycle['js'][0]['data'])) {
       $form['views_slideshow_cycle']['no_cycle_js'] = [
-        '#markup' => '<div style="color: red">' . $this->t('You need to install the jQuery cycle plugin. Create a directory in libraries (which should be in your Drupal root folder, if not create the same) called jquery.cycle, and then copy jquery.cycle.all.js into it. You can find the plugin at @url.',
+        '#markup' => '<div style="color: red">' . $this->t('You need to install the @url plugin. If you have installed it check file paths. See the readme for more details.',
           [
-            '@url' => Link::fromTextAndUrl('http://malsup.com/jquery/cycle', Url::FromUri('http://malsup.com/jquery/cycle'), [
+            '@url' => Link::fromTextAndUrl('jQuery Cycle', Url::FromUri('http://malsup.com/jquery/cycle', [
               'attributes' => ['target' => '_blank'],
-            ])->toString(),
+            ]))->toString(),
           ]) . '</div>',
       ];
     }

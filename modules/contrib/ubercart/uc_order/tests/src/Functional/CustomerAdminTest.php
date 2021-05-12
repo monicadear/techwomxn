@@ -14,11 +14,9 @@ use Drupal\uc_order\Entity\Order;
 class CustomerAdminTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_order', 'views'];
+  protected static $modules = ['uc_order', 'views'];
 
   /**
    * Don't check for or validate config schema.

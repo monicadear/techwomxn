@@ -11,8 +11,15 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
  */
 class ProductTabsTest extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_product', 'uc_attribute', 'uc_stock'];
-  public static $adminPermissions = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_product', 'uc_attribute', 'uc_stock'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'bypass node access',
     'administer attributes',
     'administer product attributes',

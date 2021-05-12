@@ -12,7 +12,7 @@ use Drupal\uc_order\OrderInterface;
  *   id = "uc_order_condition_has_products",
  *   label = @Translation("Check an order's products"),
  *   category = @Translation("Order: Product"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

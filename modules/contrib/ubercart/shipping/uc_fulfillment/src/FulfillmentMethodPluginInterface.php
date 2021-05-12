@@ -2,7 +2,7 @@
 
 namespace Drupal\uc_fulfillment;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\uc_order\OrderInterface;
@@ -10,7 +10,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Defines an interface for fulfillment method plugins.
  */
-interface FulfillmentMethodPluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface, PluginFormInterface {
+interface FulfillmentMethodPluginInterface extends PluginInspectionInterface, ConfigurableInterface, PluginFormInterface {
 
   /**
    * Returns a description of this shipping method.

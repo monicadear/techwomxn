@@ -15,14 +15,13 @@ class RoleTest extends UbercartBrowserTestBase {
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    *
    * Enable editor because that module caused a crash on non-shippable products.
+   *
    * @see https://www.drupal.org/node/2695639
    */
-  public static $modules = [
+  protected static $modules = [
     'uc_payment',
     'uc_payment_pack',
     'uc_role',

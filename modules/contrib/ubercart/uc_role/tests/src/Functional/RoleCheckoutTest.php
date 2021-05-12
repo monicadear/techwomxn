@@ -13,7 +13,10 @@ use Drupal\user\Entity\User;
  */
 class RoleCheckoutTest extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_payment', 'uc_payment_pack', 'uc_role'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_payment', 'uc_payment_pack', 'uc_role'];
 
   /**
    * Authenticated but unprivileged user.

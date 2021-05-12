@@ -49,13 +49,6 @@ abstract class ShippingQuotePluginBase extends PluginBase implements ShippingQuo
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDisplayLabel($label) {
     return ['#plain_text' => $label];
   }

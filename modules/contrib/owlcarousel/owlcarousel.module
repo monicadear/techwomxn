@@ -195,5 +195,5 @@ function _owlcarousel_string_to_array($str) {
   $str = explode(',', $str);
 
   return $str;
-
 }
+

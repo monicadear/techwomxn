@@ -12,13 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class EncryptionTest extends BrowserTestBase {
 
   /**
-   * Modules that should be enabled.
+   * {@inheritdoc}
    *
    * We need access to uc_store.encryption service, so enable uc_store.
-   *
-   * @var array
    */
-  public static $modules = ['uc_store'];
+  protected static $modules = ['uc_store'];
 
   /**
    * Encryption object.

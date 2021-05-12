@@ -1,0 +1,4 @@
+user_membership test_permission:
+    title: 'User Expiration Setting'
+    description: 'Allow User to access permission for user expiration'
+    restrict access: false

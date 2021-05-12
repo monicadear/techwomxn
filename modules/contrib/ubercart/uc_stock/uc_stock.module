@@ -71,7 +71,8 @@ function uc_stock_mail($key, &$message, $params) {
  *   If FALSE, don't check if stock tracking is active for this SKU.
  */
 function uc_stock_adjust($sku, $qty, $check_active = TRUE) {
-  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
+  $connection = \Drupal::database();
+  $stock = $connection->query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
 
   if ($check_active) {
     if (!$stock || !$stock->active) {
@@ -79,7 +80,7 @@ function uc_stock_adjust($sku, $qty, $check_active = TRUE) {
     }
   }
 
-  db_update('uc_product_stock')
+  $connection->update('uc_product_stock')
     ->expression('stock', 'stock + :qty', [':qty' => $qty])
     ->condition('sku', $sku)
     ->execute();
@@ -96,7 +97,8 @@ function uc_stock_adjust($sku, $qty, $check_active = TRUE) {
  *   The number of items in stock.
  */
 function uc_stock_set($sku, $qty) {
-  db_update('uc_product_stock')
+  $connection = \Drupal::database();
+  $connection->update('uc_product_stock')
     ->fields(['stock' => $qty])
     ->condition('sku', $sku)
     ->execute();
@@ -112,7 +114,8 @@ function uc_stock_set($sku, $qty) {
  *   The SKU's stock level, or FALSE if not active.
  */
 function uc_stock_level($sku) {
-  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
+  $connection = \Drupal::database();
+  $stock = $connection->query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
 
   if ($stock && $stock->active) {
     return $stock->stock;
@@ -131,7 +134,8 @@ function uc_stock_level($sku) {
  *   Boolean indicating whether or not the SKU has an active stock record.
  */
 function uc_stock_is_active($sku) {
-  return (bool) db_query("SELECT active FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchField();
+  $connection = \Drupal::database();
+  return (bool) $connection->query("SELECT active FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchField();
 }
 
 /**
@@ -214,7 +218,8 @@ function uc_stock_adjust_product_stock(OrderProductInterface $product, $key, Ord
   uc_stock_adjust($product->model->value, -$product->qty->value);
 
   // Load the new stock record.
-  $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $product->model->value])->fetchObject();
+  $connection = \Drupal::database();
+  $stock = $connection->query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $product->model->value])->fetchObject();
 
   // Should we notify?
   if (\Drupal::config('uc_stock.settings')->get('notify') && $stock->stock <= $stock->threshold) {

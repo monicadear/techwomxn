@@ -44,13 +44,14 @@ function uc_order_update_line_item($id, $title, $amount, $data = NULL) {
  *   Always TRUE.
  */
 function uc_order_delete_line_item($id, $order = FALSE) {
+  $connection = \Drupal::database();
   if ($order === FALSE) {
-    db_delete('uc_order_line_items')
+    $connection->delete('uc_order_line_items')
       ->condition('line_item_id', $id)
       ->execute();
   }
   else {
-    db_delete('uc_order_line_items')
+    $connection->delete('uc_order_line_items')
       ->condition('order_id', $id)
       ->execute();
   }

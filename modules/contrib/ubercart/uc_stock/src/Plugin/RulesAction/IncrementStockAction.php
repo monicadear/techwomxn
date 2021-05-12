@@ -13,7 +13,7 @@ use Drupal\rules\Core\RulesActionBase;
  *   id = "uc_stock_action_increment_stock",
  *   label = @Translation("Increment stock of products on the order with tracking activated"),
  *   category = @Translation("Stock"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     )

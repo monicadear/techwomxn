@@ -2,7 +2,7 @@
 
 namespace Drupal\uc_cart;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -15,7 +15,7 @@ use Drupal\uc_order\OrderInterface;
  * the customer, or interact with other panes. Panes are defined in enabled
  * modules as plugins that implement this interface.
  */
-interface CheckoutPanePluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
+interface CheckoutPanePluginInterface extends PluginInspectionInterface, ConfigurableInterface {
 
   /**
    * Prepares a pane for display.

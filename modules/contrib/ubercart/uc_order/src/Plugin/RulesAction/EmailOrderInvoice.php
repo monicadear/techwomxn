@@ -11,7 +11,7 @@ use Drupal\uc_order\OrderInterface;
  *   id = "uc_order_email_invoice",
  *   label = @Translation("Email an order invoice"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

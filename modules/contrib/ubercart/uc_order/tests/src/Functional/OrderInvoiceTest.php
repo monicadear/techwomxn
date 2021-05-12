@@ -52,11 +52,9 @@ class OrderInvoiceTest extends BrowserTestBase {
   protected $order;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_cart', 'views'];
+  protected static $modules = ['uc_cart', 'views'];
 
   /**
    * {@inheritdoc}

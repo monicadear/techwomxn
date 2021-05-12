@@ -2,7 +2,7 @@
 
 namespace Drupal\uc_payment;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -11,7 +11,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Defines an interface for payment method plugins.
  */
-interface PaymentMethodPluginInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurablePluginInterface {
+interface PaymentMethodPluginInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurableInterface {
 
   /**
    * Returns the payment method label with logo.

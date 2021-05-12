@@ -11,7 +11,14 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
 abstract class CatalogTestBase extends UbercartBrowserTestBase {
   use CatalogTestTrait;
 
-  public static $modules = ['uc_catalog'];
-  public static $adminPermissions = ['view catalog'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_catalog'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = ['view catalog'];
 
 }

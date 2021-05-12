@@ -222,5 +222,5 @@ class OwlCarousel extends StylePluginBase {
     ];
 
   }
-
 }
+

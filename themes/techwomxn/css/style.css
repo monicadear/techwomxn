@@ -66,17 +66,6 @@ a.name.navbar-brand {
 
 
 
-@media (max-width:320px) {
-
-.page-node-type-product .field--name-uc-product-image img {
-    width: 100%%;
-    height: 250px;
-    }
-
-}
-
-
-
 
 .frontpage_content {
     position: absolute;
@@ -87,6 +76,12 @@ a.name.navbar-brand {
         padding:20px;
         color:#FFF;
         background:rgba(0, 0, 0, 0.65);
+
+
+transition: all .25s linear; 
+  -o-transition: all .25s linear; 
+  -moz-transition: all .25s linear; 
+  -webkit-transition: all .25s linear;         
 }
 
 
@@ -96,6 +91,13 @@ a.name.navbar-brand {
     text-decoration:none;
 }
 
+
+.frontpage_image {
+    transition: all .25s linear; 
+  -o-transition: all .25s linear; 
+  -moz-transition: all .25s linear; 
+  -webkit-transition: all .25s linear; 
+}
 
 .frontpage_image img{
     width:100%;
@@ -146,112 +148,17 @@ div#widget_pager_bottom_front_slideshow-block_1 .views_slideshow_pager_field_ite
     display: inline-block;
 }
 
-@media only screen and (max-width: 600px) {
-
-#block-views-block-front-slideshow-block-1 {
-  display: block;
-      clear: both;
-  width: 95%;
-  height: 475px;
-  margin: 0 auto;
-}
-
-.view-id-front_slideshow .clearfix.frontpage_image  {
-  display:inline-block;
-  margin: 0 auto 10px auto;
-  height: 450px;
-}
-
-.view-id-front_slideshow .clearfix.frontpage_image img {
-    display: block;
-    clear: both;
-    margin: 0 auto;
-    width: 100%;
-    clear: both;
-}
-
-.view-id-front_slideshow .frontpage_content {
-    position: absolute;
-    top: 100px;
-    left: 0;
-    z-index: 99;
-    width: 90%;
-    min-height: 300px;
-    padding: 20px;
-    color: #FFF;
-    background: rgba(0, 0, 0, 0.65);
-    font-size: xx-small;
-    display: block;
-    clear: both;
-}
 
 
 
 
-}
 
 
-
-@media only screen and (max-width: 500px) {
-
-#block-views-block-front-slideshow-block-1 {
-  display: block;
-      clear: both;
-  width: 95%;
-  height: 475px;
-  margin: 0 auto;
-}
-
-.view-id-front_slideshow .clearfix.frontpage_image  {
-  display:inline-block;
-  margin: 0 auto 10px auto;
-  height: 450px;
-}
-
-.view-id-front_slideshow .clearfix.frontpage_image img {
-    display: block;
-    clear: both;
-    margin: 0 auto;
-    width: 95%;
-    clear: both;
-}
-
-.view-id-front_slideshow .frontpage_content {
-    position: absolute;
-    top: 100px;
-    left: 0;
-    z-index: 99;
-    width: 95%;
-    min-height: 300px;
-    padding: 20px;
-    color: #FFF;
-    background: rgba(0, 0, 0, 0.65);
-    font-size: xx-small;
-    display: block;
-    clear: both;
-}
-
-.views_slideshow_controls_text span, 
-.owl-theme .owl-controls 
-.owl-buttons div {
-    position: absolute;
-    top: 50%;
-    margin: -30px 0 0 0;
-    width: 30px;
-    height: 60px;
-    z-index: 99;
-    font-size: 0;
-    border-radius: 0;
-    text-align: center;
-    background: rgba(9, 9, 9, 0.2);
-    width: 95%;
-}
-
-}
 
 
 .owl-theme .owl-controls .owl-buttons .owl-prev,
 .views_slideshow_controls_text .views_slideshow_controls_text_previous{
+	top: 150px;
     left: 0;
     width: 90px;
     height: 60px;
@@ -262,6 +169,7 @@ div#widget_pager_bottom_front_slideshow-block_1 .views_slideshow_pager_field_ite
 }
 .owl-theme .owl-controls .owl-buttons .owl-next,
 .views_slideshow_controls_text .views_slideshow_controls_text_next{
+	top: 150px;
     right: 0;
     width: 90px;
     height: 60px;
@@ -290,6 +198,13 @@ div#widget_pager_bottom_front_slideshow-block_1 .views_slideshow_pager_field_ite
 .path-frontpage h2.block-title {
     color: #CD3B89;
     text-align: center;
+}
+
+
+.path-frontpage #block-views-block-blog-block-1 img.img-responsive,
+.path-frontpage #block-views-block-blog-block-2 img.img-responsive {
+    float: left;
+    margin-right: 10px;
 }
 
 
@@ -363,7 +278,8 @@ div#referrallink {
 
 /* What's New */
 
-#block-views-block-whats-new-block-1 {
+#block-views-block-whats-new-block-1, 
+#block-views-block-whats-new-block-4 {
     width: 80%;
     margin: 0 auto;
 }
@@ -417,6 +333,14 @@ display: block;
 }
 
 
+/* Events */
+.page-node-type-events .field--name-field-display-image {
+    float: left;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+
 /* Business Directory */
 .path-business-directory td.views-field.views-field-title {
     width: 20%;
@@ -463,4 +387,188 @@ display: block;
 }
 .location-title{
     font-size:20px;
+}
+
+
+
+
+
+
+/* ************************ */
+/* MEDIA SCREEN MAXWIDTH 650 **/
+
+@media only screen and (max-width: 850px) {
+
+    #block-views-block-front-slideshow-block-1 {
+        display: block;
+        clear: both;
+        width: 95%;
+        height: 475px;
+        margin: 0 auto;
+    }
+
+    .view-id-front_slideshow .clearfix.frontpage_image  {
+        display:inline-block;
+        margin: 0 auto 10px auto;
+        height: 450px;
+    }
+
+    .view-id-front_slideshow .clearfix.frontpage_image img {
+        display: block;
+        clear: both;
+        margin: 0 auto;
+        width: 100%;
+        clear: both;
+    }
+
+    .view-id-front_slideshow .frontpage_content {
+        position: absolute;
+        top: 185px;
+        left: 0;
+        z-index: 99;
+        width: 95%;
+        max-height: 275px;
+        padding: 20px 5px 5px 5px;
+        color: #FFF;
+        background: rgba(0, 0, 0, 0.65);
+        font-size: large;
+        display: block;
+        clear: both;
+    }
+
+
+    #block-views-block-highlighted-box-block-1 {
+        margin: 15px auto;
+        display: block;
+        clear: both;
+}
+
+    .view-whats-new .views-field.views-field-title {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field.views-field-field-start-date {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field-field-display-image {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field-body {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+}
+
+
+
+/* ************************ */
+/* MEDIA SCREEN MAXWIDTH 500 **/
+
+@media only screen and (max-width: 400px) {
+
+    #block-views-block-front-slideshow-block-1 {
+        display: block;
+        clear: both;
+        width: 95%;
+        height: 475px;
+        margin: 0 auto;
+    }
+
+    .view-id-front_slideshow .clearfix.frontpage_image  {
+        display:inline-block;
+        margin: 0 auto 10px auto;
+        width: 275px;
+    }
+
+    .view-id-front_slideshow .clearfix.frontpage_image img {
+        display: block;
+        clear: both;
+        margin: 0 auto;
+        clear: both;
+    }
+
+    .view-id-front_slideshow .frontpage_content {
+        position: absolute;
+        top: 150px;
+        left: 0;
+        z-index: 99;
+		width: 300px;
+    	height: 550px;
+        padding: 20px 5px 5px 5px;
+        color: #FFF;
+        background: rgba(0, 0, 0, 0.65);
+        font-size: large;
+        display: block;
+        clear: both;
+    }
+
+       .view-id-front_slideshow .frontpage_content .container {
+            display: block;
+            width: 100%;
+            clear: both;
+    }
+
+    .path-frontpage .views-slideshow-controls-bottom {
+        display: none;
+    }
+
+    .views_slideshow_controls_text span, 
+    .owl-theme .owl-controls 
+    .owl-buttons div {
+        position: absolute;
+        top: 75px;
+        margin: -30px 0 0 0;
+        width: 30px;
+        height: 60px;
+        z-index: 99;
+        font-size: 0;
+        border-radius: 0;
+        text-align: center;
+        background: rgba(9, 9, 9, 0.2);
+        width: 95%;
+    }
+
+
+    .view-whats-new .views-field.views-field-title {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field.views-field-field-start-date {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field-field-display-image {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .view-whats-new .views-field-body {
+        display: block;
+        clear: both;
+        width: 100%;
+        margin: 0 auto;
+    }
+
 }

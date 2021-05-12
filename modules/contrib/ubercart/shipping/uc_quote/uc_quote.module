@@ -48,12 +48,13 @@ function uc_quote_node_insert($node) {
  */
 function uc_quote_node_update($node) {
   if (uc_product_is_product($node)) {
+    $connection = \Drupal::database();
     if (isset($node->shipping_type)) {
       uc_quote_set_shipping_type('product', $node->id(), $node->shipping_type);
     }
 
     if (!empty($node->shipping_address['street1'])) {
-      db_merge('uc_quote_product_locations')
+      $connection->merge('uc_quote_product_locations')
         ->key(['nid' => $node->id()])
         ->fields([
           'first_name' => $node->shipping_address['first_name'],
@@ -70,7 +71,7 @@ function uc_quote_node_update($node) {
         ->execute();
     }
     else {
-      db_delete('uc_quote_product_locations')
+      $connection->delete('uc_quote_product_locations')
         ->condition('nid', $node->id())
         ->execute();
     }
@@ -91,11 +92,12 @@ function uc_quote_node_load($nodes) {
     return;
   }
 
+  $connection = \Drupal::database();
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
+  $shipping_types = $connection->query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
 
-  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids[])", [':nids[]' => $nids], ['fetch' => 'Address'])->fetchAllAssoc('nid');
+  $addresses = $connection->query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids[])", [':nids[]' => $nids], ['fetch' => 'Address'])->fetchAllAssoc('nid');
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
@@ -119,12 +121,13 @@ function uc_quote_node_load($nodes) {
  * Implements hook_node_delete().
  */
 function uc_quote_node_delete($node) {
-  db_delete('uc_quote_shipping_types')
+  $connection = \Drupal::database();
+  $connection->delete('uc_quote_shipping_types')
     ->condition('id_type', 'product')
     ->condition('id', $node->id())
     ->execute();
 
-  db_delete('uc_quote_product_locations')
+  $connection->delete('uc_quote_product_locations')
     ->condition('nid', $node->id())
     ->execute();
 }
@@ -223,8 +226,9 @@ function uc_quote_uc_cart_pane($items) {
  * Implements hook_uc_order_load().
  */
 function uc_quote_uc_order_load($orders) {
+  $connection = \Drupal::database();
   foreach ($orders as $order) {
-    $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", [':id' => $order->id()])->fetchAssoc();
+    $quote = $connection->query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", [':id' => $order->id()])->fetchAssoc();
     $order->quote = $quote;
     $order->quote['accessorials'] = strval($quote['accessorials']);
   }
@@ -235,7 +239,8 @@ function uc_quote_uc_order_load($orders) {
  */
 function uc_quote_uc_order_update(OrderInterface $order) {
   if (isset($order->quote['method'])) {
-    db_merge('uc_order_quotes')
+    $connection = \Drupal::database();
+    $connection->merge('uc_order_quotes')
       ->key(['order_id' => $order->id()])
       ->fields([
         'method' => $order->quote['method'],
@@ -250,7 +255,8 @@ function uc_quote_uc_order_update(OrderInterface $order) {
  * Implements hook_uc_order_delete().
  */
 function uc_quote_uc_order_delete(OrderInterface $order) {
-  db_delete('uc_order_quotes')
+  $connection = \Drupal::database();
+  $connection->delete('uc_order_quotes')
     ->condition('order_id', $order->id())
     ->execute();
 }
@@ -286,8 +292,9 @@ function uc_quote_uc_shipping_type() {
  *   The type of product that is fulfilled by various fulfillment modules.
  */
 function uc_quote_set_shipping_type($id_type, $id, $shipping_type) {
+  $connection = \Drupal::database();
   if ($shipping_type !== '') {
-    db_merge('uc_quote_shipping_types')
+    $connection->merge('uc_quote_shipping_types')
       ->key([
         'id_type' => $id_type,
         'id' => $id,
@@ -296,7 +303,7 @@ function uc_quote_set_shipping_type($id_type, $id, $shipping_type) {
       ->execute();
   }
   else {
-    db_delete('uc_quote_shipping_types')
+    $connection->delete('uc_quote_shipping_types')
       ->condition('id_type', $id_type)
       ->condition('id', $id)
       ->execute();
@@ -319,7 +326,8 @@ function uc_quote_get_shipping_type($id_type, $id) {
   static $types = [];
 
   if (!isset($types[$id_type][$id])) {
-    $types[$id_type][$id] = db_query('SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id', [':type' => $id_type, ':id' => $id])->fetchField();
+    $connection = \Drupal::database();
+    $types[$id_type][$id] = $connection->query('SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id', [':type' => $id_type, ':id' => $id])->fetchField();
   }
   // @todo Shouldn't have to test here and add the small_package default -
   // there should always be a value like there was in D7.
@@ -356,7 +364,8 @@ function uc_product_get_shipping_type($product) {
  *   the uc_quote's default ship_from_address if the product's is not set.
  */
 function uc_quote_get_default_shipping_address($nid) {
-  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", [':nid' => $nid])->fetchObject('Drupal\uc_store\Address');
+  $connection = \Drupal::database();
+  $address = $connection->query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", [':nid' => $nid])->fetchObject('Drupal\uc_store\Address');
 
   if (empty($address)) {
     $quote_config = \Drupal::config('uc_quote.settings');

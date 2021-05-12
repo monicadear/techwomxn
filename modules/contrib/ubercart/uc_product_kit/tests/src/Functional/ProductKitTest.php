@@ -15,8 +15,15 @@ class ProductKitTest extends UbercartBrowserTestBase {
   use CatalogTestTrait;
   use ProductTestTrait;
 
-  public static $modules = ['uc_product_kit', 'uc_catalog'];
-  public static $adminPermissions = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_product_kit', 'uc_catalog'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'create product_kit content',
     'edit any product_kit content',
     'view catalog',

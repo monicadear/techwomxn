@@ -62,13 +62,14 @@ function uc_usps_node_update($node) {
   if (uc_product_is_product($node)) {
     if (isset($node->usps)) {
       $usps_values = $node->usps;
+      $connection = \Drupal::database();
       if (!$node->isNewRevision()) {
-        db_delete('uc_usps_products')
+        $connection->delete('uc_usps_products')
           ->condition('vid', $node->getRevisionId())
           ->execute();
       }
 
-      db_insert('uc_usps_products')
+      $connection->insert('uc_usps_products')
         ->fields([
           'vid' => $node->getRevisionId(),
           'nid' => $node->id(),
@@ -94,9 +95,10 @@ function uc_usps_node_load($nodes) {
   }
 
   $vids = [];
+  $connection = \Drupal::database();
   $usps_config = \Drupal::config('uc_usps.settings');
   $shipping_type = $usps_config->get('uc_store_shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
+  $shipping_types = $connection->query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
@@ -112,7 +114,7 @@ function uc_usps_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT * FROM {uc_usps_products} WHERE vid IN (:vids[])", [':vids[]' => $vids], ['fetch' => PDO::FETCH_ASSOC]);
+    $result = $connection->query("SELECT * FROM {uc_usps_products} WHERE vid IN (:vids[])", [':vids[]' => $vids], ['fetch' => PDO::FETCH_ASSOC]);
     foreach ($result as $usps) {
       $nodes[$usps['nid']]->usps = $usps;
     }
@@ -123,7 +125,8 @@ function uc_usps_node_load($nodes) {
  * Implements hook_node_delete().
  */
 function uc_usps_node_delete($node) {
-  db_delete('uc_usps_products')
+  $connection = \Drupal::database();
+  $connection->delete('uc_usps_products')
     ->condition('nid', $node->id())
     ->execute();
 }
@@ -132,7 +135,8 @@ function uc_usps_node_delete($node) {
  * Implements hook_node_revision_delete().
  */
 function uc_usps_node_revision_delete($node) {
-  db_delete('uc_usps_products')
+  $connection = \Drupal::database();
+  $connection->delete('uc_usps_products')
     ->condition('vid', $node->getRevisionId())
     ->execute();
 }

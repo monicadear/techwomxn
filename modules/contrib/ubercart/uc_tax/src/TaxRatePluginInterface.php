@@ -2,7 +2,7 @@
 
 namespace Drupal\uc_tax;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\uc_order\OrderInterface;
@@ -10,7 +10,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Defines an interface for TaxRate plugins.
  */
-interface TaxRatePluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface, PluginFormInterface {
+interface TaxRatePluginInterface extends PluginInspectionInterface, ConfigurableInterface, PluginFormInterface {
 
   /**
    * Returns a short description of this tax rate.

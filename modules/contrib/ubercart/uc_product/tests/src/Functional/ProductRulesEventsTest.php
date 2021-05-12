@@ -15,11 +15,9 @@ class ProductRulesEventsTest extends BrowserTestBase {
   use ProductTestTrait;
 
   /**
-   * Additional modules required.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_product', 'rules', 'views'];
+  protected static $modules = ['uc_product', 'rules', 'views'];
 
   /**
    * Don't check for or validate config schema.

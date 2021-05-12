@@ -1,7 +1,7 @@
 uc_cart_checkout_start:
   label: 'Customer starts checkout'
   category: 'Cart'
-  context:
+  context_definitions:
     order:
       type: 'entity:uc_order'
       label: 'Order'
@@ -9,7 +9,7 @@ uc_cart_checkout_start:
 uc_cart_checkout_review_order:
   label: 'Customer reviews order'
   category: 'Cart'
-  context:
+  context_definitions:
     order:
       type: 'entity:uc_order'
       label: 'Order'
@@ -17,7 +17,7 @@ uc_cart_checkout_review_order:
 uc_cart_checkout_complete:
   label: 'Customer completes checkout'
   category: 'Cart'
-  context:
+  context_definitions:
     order:
       type: 'entity:uc_order'
       label: 'Order'

@@ -1,7 +1,7 @@
 uc_product_load:
   label: 'A product is being loaded'
   category: 'Product'
-  context:
+  context_definitions:
     product:
       type: 'entity:node'
       label: 'Product'

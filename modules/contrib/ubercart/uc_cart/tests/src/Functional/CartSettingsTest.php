@@ -12,7 +12,10 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
  */
 class CartSettingsTest extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_cart', 'block'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_cart', 'block'];
 
   /**
    * {@inheritdoc}

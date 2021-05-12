@@ -1,7 +1,7 @@
 uc_payment_entered:
   label: 'A payment gets entered for an order'
   category: 'Payment'
-  context:
+  context_definitions:
     order:
       type: 'entity:uc_order'
       label: 'Order'

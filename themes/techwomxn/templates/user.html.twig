@@ -19,8 +19,8 @@
 
 
 <style>
-.col-md-5 {border-right: 1px dotted #CCC;}
-.col-md-4 {border-right: 1px dotted #CCC;}
+.col-md-5 {border-right: 1px dotted #CCC; }
+.col-md-4 {border-right: 1px dotted #CCC; }
 </style>
 
 
@@ -30,17 +30,27 @@
 <h1>{{- content.field_first_name_user -}} {{- content.field_last_name_user -}} </h1>
 
 		<div class="row">
-				<div class="col-md-4 margin-bottom-25">
+				<div class="col-md-5 margin-bottom-25">
+
+					<div class="row displayphoto">
+						<div class="col-sm-12">
+						 {{ content.user_picture }} 
+						</div>
+					</div>
 
 					<div class="row displayname">
 						<div class="col-sm-4"><label>Posting as: </label></div>
 						<div class="col-sm-8">  {{ user.displayname }} </div>
 					</div>
 
+
+
 					<div class="row field_member_for">
 						<div class="col-sm-4"><label>Member since: </label></div>
 						<div class="col-sm-8">{{ user.getCreatedTime|format_date('month_year') }}</div>
 					</div>
+
+
 
 					<div class="row field_titleposition">
 						<div class="col-sm-4"><label>Title: </label></div>
@@ -52,7 +62,19 @@
 						<div class="col-sm-8">{{- content.field_organization -}} </div>
 					</div>
 
-					<div class="row field_contact">
+			
+
+				</div>
+
+				
+				<div class="col-md-6">
+					<div class="margin-bottom-25 clearfix field_about_me">
+						<div class="clearfix contact-me"><label>Bio: </label></div>
+						{{- content.field_bio -}}
+					</div>
+
+
+				<div class="row field_contact">
 						<div class="col-sm-4"><label>Contact: </label></div>
 						<div class="col-sm-8">
 
@@ -73,23 +95,15 @@
 						<div class="clearfix">{{ content.field_twitter }} </div>
 					{% endif %}
 
+						</div>
+
+
 					</div>
-					</div>
+
 
 				</div>
 
-				
-				<div class="col-md-5">
-					<div class="margin-bottom-25 clearfix field_about_me">
-						<div class="clearfix contact-me"><label>Bio: </label></div>
-						{{- content.field_bio -}}
-					</div>
-				</div>
 
-
-				<div class="col-md-3 custom_user_profile_pic">
-					<div class="margin-bottom-15 clearfix"> {{ content.user_picture }} </div>
-				</div>
 				
 			</div>
 

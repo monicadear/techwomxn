@@ -12,7 +12,7 @@ use Drupal\rules\Core\RulesConditionBase;
  *   id = "uc_payment_condition_order_balance",
  *   label = @Translation("Check the order balance"),
  *   category = @Translation("Payment"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

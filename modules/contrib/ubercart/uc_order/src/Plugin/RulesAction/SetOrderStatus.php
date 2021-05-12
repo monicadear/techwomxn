@@ -13,7 +13,7 @@ use Drupal\uc_order\Entity\OrderStatus;
  *   id = "uc_order_update_status",
  *   label = @Translation("Update the order status"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

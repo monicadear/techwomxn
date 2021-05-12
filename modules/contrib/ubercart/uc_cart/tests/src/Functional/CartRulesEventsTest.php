@@ -13,11 +13,9 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
 class CartRulesEventsTest extends UbercartBrowserTestBase {
 
   /**
-   * Additional modules required.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['uc_cart', 'rules'];
+  protected static $modules = ['uc_cart', 'rules'];
 
   /**
    * Reaction Rules entity storage.

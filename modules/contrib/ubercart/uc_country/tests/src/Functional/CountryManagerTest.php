@@ -11,7 +11,10 @@ use Drupal\Tests\BrowserTestBase;
  */
 class CountryManagerTest extends BrowserTestBase {
 
-  public static $modules = ['uc_country'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_country'];
 
   /**
    * Test overriding the core Drupal country_manager service.

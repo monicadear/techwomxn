@@ -547,7 +547,8 @@ function uc_get_addresses($uid, $type = 'billing') {
     $type = 'billing';
   }
 
-  $query = db_select('uc_orders', 'o')->distinct();
+  $connection = \Drupal::database();
+  $query = $connection->select('uc_orders', 'o')->distinct();
 
   $alias = [];
   $alias['first_name'] = $query->addField('o', $type . '_first_name', 'first_name');

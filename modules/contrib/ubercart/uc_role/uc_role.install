@@ -183,7 +183,8 @@ function uc_role_schema() {
  * Implements hook_uninstall().
  */
 function uc_role_uninstall() {
-  db_delete('uc_product_features')
+  $connection = \Drupal::database();
+  $connection->delete('uc_product_features')
     ->condition('fid', 'role')
     ->execute();
 }

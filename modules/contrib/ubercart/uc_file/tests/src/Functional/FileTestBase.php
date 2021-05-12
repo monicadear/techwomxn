@@ -9,7 +9,10 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
  */
 abstract class FileTestBase extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_payment', 'uc_payment_pack', 'uc_file'];
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_payment', 'uc_payment_pack', 'uc_file'];
 
   protected $testFilename = '';
 

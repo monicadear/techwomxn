@@ -11,8 +11,15 @@ use Drupal\Tests\uc_store\Functional\UbercartBrowserTestBase;
  */
 class OrderPaymentsFormTest extends UbercartBrowserTestBase {
 
-  public static $modules = ['uc_payment', 'uc_payment_pack'];
-  public static $adminPermissions = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_payment', 'uc_payment_pack'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'view payments',
     'manual payments',
     'delete payments',

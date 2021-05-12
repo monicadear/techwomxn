@@ -226,7 +226,8 @@ function uc_credit_transaction_types() {
  */
 function uc_credit_log_authorization($order_id, $auth_id, $amount) {
   // Load the existing order data array.
-  $data = db_query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
+  $connection = \Drupal::database();
+  $data = $connection->query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
   $data = unserialize($data);
 
   // Add the authorization to the cc_txns.
@@ -236,7 +237,7 @@ function uc_credit_log_authorization($order_id, $auth_id, $amount) {
   ];
 
   // Save the updated data array to the database.
-  db_update('uc_orders')
+  $connection->update('uc_orders')
     ->fields(['data' => serialize($data)])
     ->condition('order_id', $order_id)
     ->execute();
@@ -258,7 +259,8 @@ function uc_credit_log_authorization($order_id, $auth_id, $amount) {
  */
 function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
   // Load the existing order data array.
-  $data = db_query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
+  $connection = \Drupal::database();
+  $data = $connection->query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
   $data = unserialize($data);
 
   // Return FALSE if we can't find the authorization.
@@ -270,7 +272,7 @@ function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
   $data['cc_txns']['authorizations'][$auth_id]['captured'] = \Drupal::time()->getRequestTime();
 
   // Save the updated data array to the database.
-  db_update('uc_orders')
+  $connection->update('uc_orders')
     ->fields(['data' => serialize($data)])
     ->condition('order_id', $order_id)
     ->execute();
@@ -295,7 +297,8 @@ function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
  */
 function uc_credit_log_reference($order_id, $ref_id, $cc_number) {
   // Load the existing order data array.
-  $data = db_query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
+  $connection = \Drupal::database();
+  $data = $connection->query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
   $data = unserialize($data);
 
   $data['cc_txns']['references'][$ref_id] = [
@@ -304,7 +307,7 @@ function uc_credit_log_reference($order_id, $ref_id, $cc_number) {
   ];
 
   // Save the updated data array to the database.
-  db_update('uc_orders')
+  $connection->update('uc_orders')
     ->fields(['data' => serialize($data)])
     ->condition('order_id', $order_id)
     ->execute();

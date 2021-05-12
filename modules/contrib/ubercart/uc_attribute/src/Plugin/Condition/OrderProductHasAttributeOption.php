@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Order has a product with a particular attribute option"),
  *   description = @Translation("Search the products of an order for a particular attribute option."),
  *   category = @Translation("Order: Product"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

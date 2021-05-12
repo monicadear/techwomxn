@@ -1,10 +1,13 @@
 <?php
 
 /**
- * @file Provides API homepage for Views Slideshow.
+ * @file
+ * Provides API homepage for Views Slideshow.
  */
 
 /**
+ * Views slide show.
+ *
  * @mainpage Views Slideshow API & Developer Documentation
  * Welcome to the Views Slideshow developer's documentation.
  *

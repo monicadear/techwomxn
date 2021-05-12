@@ -17,7 +17,7 @@ class AddressElementTest extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['uc_store'];
+  protected static $modules = ['uc_store'];
 
   /**
    * User with privileges to do everything.
@@ -31,7 +31,7 @@ class AddressElementTest extends JavascriptTestBase {
    *
    * @var string[]
    */
-  public static $adminPermissions = [
+  protected static $adminPermissions = [
     'access administration pages',
     'administer store',
   ];

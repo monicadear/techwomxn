@@ -13,7 +13,7 @@ use Drupal\uc_order\OrderStatusInterface;
  *   id = "uc_order_condition_order_state",
  *   label = @Translation("Check an order's state"),
  *   category = @Translation("Order"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

@@ -20,17 +20,19 @@ class PaymentRulesEventsTest extends UbercartBrowserTestBase {
   protected $profile = 'testing';
 
   /**
-   * Additional modules required.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'uc_payment',
     'uc_payment_pack',
     'uc_order',
     'rules',
   ];
-  public static $adminPermissions = [
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'view payments',
     'manual payments',
     'delete payments',

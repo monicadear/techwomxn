@@ -78,7 +78,8 @@ function uc_product_node_update($node) {
     return;
   }
 
-  db_merge('uc_products')
+  $connection = \Drupal::database();
+  $connection->merge('uc_products')
     ->keys([
       'vid' => $node->getRevisionId(),
       'nid' => $node->id(),
@@ -112,7 +113,8 @@ function uc_product_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', [':vids[]' => $vids]);
+    $connection = \Drupal::database();
+    $result = $connection->query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', [':vids[]' => $vids]);
     $fields = ['model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable'];
     foreach ($result as $record) {
       foreach ($fields as $name) {
@@ -215,7 +217,8 @@ function uc_product_node_delete($node) {
     uc_product_feature_delete($feature->pfid);
   }
 
-  db_delete('uc_products')
+  $connection = \Drupal::database();
+  $connection->delete('uc_products')
     ->condition('nid', $node->id())
     ->execute();
 }
@@ -762,7 +765,8 @@ function uc_product_get_models($nid, $add_blank = TRUE) {
   // Get any modules' SKUs on this node.
   $models = \Drupal::moduleHandler()->invokeAll('uc_product_models', [$nid]);
   // Add the base SKU of the node.
-  $models[] = db_query('SELECT model FROM {uc_products} WHERE nid = :nid', [':nid' => $nid])->fetchField();
+  $connection = \Drupal::database();
+  $models[] = $connection->query('SELECT model FROM {uc_products} WHERE nid = :nid', [':nid' => $nid])->fetchField();
 
   // Now we map the SKUs to the keys, for form handling, etc.
   $models = array_combine($models, $models);
@@ -880,15 +884,16 @@ function uc_product_feature_data($fid, $key) {
  *   - description: The string describing the feature for the overview table.
  */
 function uc_product_feature_save(array &$data) {
+  $connection = \Drupal::database();
   if (empty($data['pfid'])) {
     unset($data['pfid']);
-    $data['pfid'] = db_insert('uc_product_features')
+    $data['pfid'] = $connection->insert('uc_product_features')
       ->fields($data)
       ->execute();
     \Drupal::messenger()->addMessage(t('The product feature has been added.'));
   }
   else {
-    db_merge('uc_product_features')
+    $connection->merge('uc_product_features')
       ->key(['pfid' => $data['pfid']])
       ->fields($data)
       ->execute();
@@ -906,7 +911,8 @@ function uc_product_feature_save(array &$data) {
  *   The array of all product features object.
  */
 function uc_product_feature_load_multiple($nid) {
-  $features = db_query('SELECT * FROM {uc_product_features} WHERE nid = :nid ORDER BY pfid ASC', [':nid' => $nid])->fetchAllAssoc('pfid');
+  $connection = \Drupal::database();
+  $features = $connection->query('SELECT * FROM {uc_product_features} WHERE nid = :nid ORDER BY pfid ASC', [':nid' => $nid])->fetchAllAssoc('pfid');
 
   return $features;
 }
@@ -925,7 +931,8 @@ function uc_product_feature_load_multiple($nid) {
  *   The product feature array.
  */
 function uc_product_feature_load($pfid) {
-  $feature = db_query('SELECT * FROM {uc_product_features} WHERE pfid = :pfid', [':pfid' => $pfid])->fetchAssoc();
+  $connection = \Drupal::database();
+  $feature = $connection->query('SELECT * FROM {uc_product_features} WHERE pfid = :pfid', [':pfid' => $pfid])->fetchAssoc();
 
   return $feature;
 }
@@ -947,7 +954,8 @@ function uc_product_feature_delete($pfid) {
   if (function_exists($func)) {
     $func($pfid);
   }
-  db_delete('uc_product_features')
+  $connection = \Drupal::database();
+  $connection->delete('uc_product_features')
     ->condition('pfid', $pfid)
     ->execute();
 
@@ -975,9 +983,10 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
       'default_qty' => 1,
       'shippable' => $type->getThirdPartySetting('uc_product', 'shippable', TRUE),
     ];
-    $result = db_query('SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL', [':type' => $type->id()]);
+    $connection = \Drupal::database();
+    $result = $connection->query('SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL', [':type' => $type->id()]);
     foreach ($result as $node) {
-      db_insert('uc_products')
+      $connection->insert('uc_products')
         ->fields($defaults + [
           'nid' => $node->nid,
           'vid' => $node->vid,

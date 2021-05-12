@@ -137,7 +137,8 @@ function uc_fulfillment_uc_order_actions(OrderInterface $order) {
 function uc_fulfillment_uc_order_can_delete(OrderInterface $order) {
   // Find and check the shipments for tracking numbers.
   // {uc_shipments}.tracking_number is NOT NULL.
-  $shipment_count = db_select('uc_shipments')
+  $connection = \Drupal::database();
+  $shipment_count = $connection->select('uc_shipments')
     ->condition('order_id', $order->id())
     ->condition('tracking_number', '', '<>')
     ->countQuery()
@@ -148,7 +149,7 @@ function uc_fulfillment_uc_order_can_delete(OrderInterface $order) {
   }
 
   // Find and check the packages.
-  $package_count = db_select('uc_packages')
+  $package_count = $connection->select('uc_packages')
     ->condition('order_id', $order->id())
     ->isNotNull('tracking_number')
     ->condition('tracking_number', '', '<>')

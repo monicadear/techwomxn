@@ -51,13 +51,13 @@ function _views_slideshow_preprocess_views_view_slideshow(&$vars) {
   // Make sure the main slideshow settings are defined before building the
   // slideshow.
   if (empty($main_frame_module)) {
-    drupal_set_message(
+    \Drupal::messenger()->addMessage(
       t('No main frame module is enabled for views slideshow. This is often because another module which Views Slideshow needs is not enabled. For example, 4.x needs a module like "Views Slideshow: Cycle" enabled.'),
       'error'
     );
   }
   elseif (empty($options[$main_frame_module])) {
-    drupal_set_message(t('The options for @module does not exists.', ['@module' => $main_frame_module]), 'error');
+    \Drupal::messenger()->addMessage(t('The options for @module does not exists.', ['@module' => $main_frame_module]), 'error');
   }
   elseif (!empty($vars['rows'])) {
     $settings = $options[$main_frame_module];
@@ -292,7 +292,7 @@ function template_preprocess_views_slideshow_pager_bullets(&$vars) {
   $vars['#attached']['library'][] = 'views_slideshow/pager_bullets';
   $vars['#attached']['drupalSettings']['viewsSlideshowPagerFields'][$vars['vss_id']] = [
     $vars['location'] => [
-      'activatePauseOnHover' => $vars['settings']['views_slideshow_pager_bullets']['views_slideshow_pager_bullets_hover'],
+      'activatePauseOnHover' => $vars['settings']['views_slideshow_pager_bullets']['views_slideshow_pager_bullets_hover'] ?? '',
     ],
   ];
 

@@ -13,7 +13,7 @@ use Drupal\rules\Core\RulesConditionBase;
  *   label = @Translation("Node is a product"),
  *   description = @Translation("Determines if the content type (node) is a product content type."),
  *   category = @Translation("Node"),
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node",
  *       label = @Translation("Content"),
  *       description = @Translation("The data to be checked to be empty, specified by using a data selector, e.g. 'node:uid:entity:name:value'.")

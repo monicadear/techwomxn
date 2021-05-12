@@ -269,7 +269,8 @@ function uc_order_product_revive($products, $published = TRUE) {
  */
 function uc_order_comments_load($order_id, $admin = FALSE) {
   $table = $admin ? 'uc_order_admin_comments' : 'uc_order_comments';
-  $query = db_select($table, 'oc')
+  $connection = \Drupal::database();
+  $query = $connection->select($table, 'oc')
     ->fields('oc')
     ->condition('order_id', $order_id)
     ->orderBy('oc.created')
@@ -288,8 +289,9 @@ function uc_order_comment_save($order_id, $uid, $message, $type = 'admin', $stat
   $event = new OrderCommentAddedEvent($order);
   \Drupal::service('event_dispatcher')->dispatch($event::EVENT_NAME, $event);
 
+  $connection = \Drupal::database();
   if ($type == 'admin') {
-    db_insert('uc_order_admin_comments')
+    $connection->insert('uc_order_admin_comments')
       ->fields([
         'order_id' => $order_id,
         'uid' => $uid,
@@ -299,7 +301,7 @@ function uc_order_comment_save($order_id, $uid, $message, $type = 'admin', $stat
       ->execute();
   }
   elseif ($type == 'order') {
-    db_insert('uc_order_comments')
+    $connection->insert('uc_order_comments')
       ->fields([
         'order_id' => $order_id,
         'uid' => $uid,

@@ -17,6 +17,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -204,7 +205,8 @@ function uc_attribute_node_load($nodes) {
  */
 function uc_attribute_node_insert($node) {
   // Set attributes from class attributes.
-  $select = db_select('uc_class_attributes', 'ca')
+  $connection = \Drupal::database();
+  $select = $connection->select('uc_class_attributes', 'ca')
     ->fields('ca', [
       'aid',
       'label',
@@ -217,12 +219,12 @@ function uc_attribute_node_insert($node) {
   // SELECT $node->nid AS nid.
   $select->addExpression(':nid', 'nid', [':nid' => $node->id()]);
 
-  db_insert('uc_product_attributes')
+  $connection->insert('uc_product_attributes')
     ->from($select)
     ->execute();
 
   // Set options from class options.
-  $select = db_select('uc_class_attribute_options', 'co')
+  $select = $connection->select('uc_class_attribute_options', 'co')
     ->fields('co', [
       'oid',
       'cost',
@@ -233,7 +235,7 @@ function uc_attribute_node_insert($node) {
     ->condition('pcid', $node->getType());
   $select->addExpression(':nid', 'nid', [':nid' => $node->id()]);
 
-  db_insert('uc_product_options')
+  $connection->insert('uc_product_options')
     ->from($select)
     ->execute();
 }
@@ -242,15 +244,16 @@ function uc_attribute_node_insert($node) {
  * Implements hook_node_delete().
  */
 function uc_attribute_node_delete($node) {
-  db_delete('uc_product_options')
+  $connection = \Drupal::database();
+  $connection->delete('uc_product_options')
     ->condition('nid', $node->id())
     ->execute();
 
-  db_delete('uc_product_adjustments')
+  $connection->delete('uc_product_adjustments')
     ->condition('nid', $node->id())
     ->execute();
 
-  db_delete('uc_product_attributes')
+  $connection->delete('uc_product_attributes')
     ->condition('nid', $node->id())
     ->execute();
 }
@@ -272,7 +275,8 @@ function uc_attribute_node_update_index($node) {
     $output .= "\n";
   }
 
-  $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $node->id()]);
+  $connection = \Drupal::database();
+  $result = $connection->query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $node->id()]);
   while ($model = $result->fetchField()) {
     $output .= '<h2>' . $model . "</h2>\n";
   }
@@ -291,12 +295,15 @@ function uc_attribute_node_update_index($node) {
  */
 function uc_attribute_uc_product_models($nid) {
   // Get all the SKUs for all the attributes on this node.
-  $models = db_query("SELECT DISTINCT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $nid])->fetchCol();
+  $connection = \Drupal::database();
+  $models = $connection->query("SELECT DISTINCT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $nid])->fetchCol();
 
   return $models;
 }
 
 /**
+ * Implements hook_uc_add_to_cart_data().
+ *
  * Stores the customer's choices in the cart.
  */
 function uc_attribute_uc_add_to_cart_data($form_values) {
@@ -332,11 +339,12 @@ function uc_attribute_uc_order_product_alter(OrderProductInterface &$product, Or
  * Implements hook_node_type_delete().
  */
 function uc_attribute_node_type_delete(NodeTypeInterface $type) {
-  db_delete('uc_class_attributes')
+  $connection = \Drupal::database();
+  $connection->delete('uc_class_attributes')
     ->condition('pcid', $type->id())
     ->execute();
 
-  db_delete('uc_class_attribute_options')
+  $connection->delete('uc_class_attribute_options')
     ->condition('pcid', $type->id())
     ->execute();
 }
@@ -365,7 +373,8 @@ function uc_attribute_uc_product_alter(&$node) {
     }
     ksort($combination);
 
-    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", [':nid' => $node->id(), ':combo' => serialize($combination)])->fetchField();
+    $connection = \Drupal::database();
+    $model = $connection->query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", [':nid' => $node->id(), ':combo' => serialize($combination)])->fetchField();
 
     if (!empty($model)) {
       $node->model = $model;
@@ -440,12 +449,13 @@ function uc_attribute_load_multiple(array $aids = [], $type = '', $id = NULL) {
   $sql = uc_attribute_type_info($type);
 
   // Product/class attributes.
+  $connection = \Drupal::database();
   if (!empty($type)) {
     // Seems like a big query to get attribute IDs, but it's all about the sort.
     // (I'm not sure if the default ordering is propagating down correctly here.
     // It appears that product/class attributes with no ordering won't let the
     // attribute's propagate down, as it does when loading. -cha0s)
-    $query = db_select($sql['attr_table'], 'uca')
+    $query = $connection->select($sql['attr_table'], 'uca')
       ->fields('uca', ['aid'])
       ->condition("uca.{$sql['id']}", $id);
 
@@ -456,7 +466,7 @@ function uc_attribute_load_multiple(array $aids = [], $type = '', $id = NULL) {
   }
   // Base attributes.
   else {
-    $query = db_select('uc_attributes', 'ua')
+    $query = $connection->select('uc_attributes', 'ua')
       ->fields('ua', ['aid'])
       ->orderBy('ordering')
       ->orderBy('name');
@@ -497,11 +507,12 @@ function uc_attribute_load_multiple(array $aids = [], $type = '', $id = NULL) {
 function uc_attribute_load($aid, $id = NULL, $type = '') {
   $sql = uc_attribute_type_info($type);
 
+  $connection = \Drupal::database();
   switch ($type) {
     case 'product':
     case 'class':
       // Read attribute data.
-      $query = db_select('uc_attributes', 'a')
+      $query = $connection->select('uc_attributes', 'a')
         ->fields('a', ['aid', 'name', 'description'])
         ->condition('a.aid', $aid);
 
@@ -530,7 +541,7 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
       }
 
       // Read option data.
-      $query = db_select($sql['opt_table'], 'po')
+      $query = $connection->select($sql['opt_table'], 'po')
         ->fields('po', [$sql['id'], 'oid', 'cost', 'price', 'weight', 'ordering']);
       $query->leftJoin('uc_attribute_options', 'ao', "po.oid = ao.oid AND po.{$sql['id']} = :id", [':id' => $id]);
       $query->fields('ao', ['name', 'aid'])
@@ -543,8 +554,8 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
 
     default:
       // Read attribute and option data.
-      $attribute = db_query("SELECT * FROM {uc_attributes} WHERE aid = :aid", [':aid' => $aid])->fetchObject();
-      $result = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid ORDER BY ordering, name", [':aid' => $aid]);
+      $attribute = $connection->query("SELECT * FROM {uc_attributes} WHERE aid = :aid", [':aid' => $aid])->fetchObject();
+      $result = $connection->query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid ORDER BY ordering, name", [':aid' => $aid]);
 
       // Don't try to build it further if it failed already.
       if (!$attribute) {
@@ -584,8 +595,8 @@ function uc_attribute_load_product_attributes($nid) {
  * @param object $attribute
  *   The attribute object to save.
  *
- * @return int
- *   The integer result from db_merge().
+ * @return \Drupal\Core\Database\StatementInterface|null
+ *   A prepared statement, or NULL if the query is not valid.
  */
 function uc_attribute_save(&$attribute) {
   $fields = [
@@ -597,15 +608,16 @@ function uc_attribute_save(&$attribute) {
     'description' => $attribute->description,
   ];
 
+  $connection = \Drupal::database();
   if (empty($attribute->aid)) {
-    $attribute->aid = db_insert('uc_attributes')
+    $attribute->aid = $connection->insert('uc_attributes')
       ->fields($fields)
       ->execute();
 
     return Merge::STATUS_INSERT;
   }
   else {
-    return db_merge('uc_attributes')
+    return $connection->merge('uc_attributes')
       ->key('aid', $attribute->aid)
       ->fields($fields)
       ->execute();
@@ -629,10 +641,11 @@ function uc_attribute_delete($aid) {
   uc_attribute_subject_delete($aid, 'product');
 
   // Delete base attributes and their options.
-  db_delete('uc_attribute_options')
+  $connection = \Drupal::database();
+  $connection->delete('uc_attribute_options')
     ->condition('aid', $aid)
     ->execute();
-  db_delete('uc_attributes')
+  $connection->delete('uc_attributes')
     ->condition('aid', $aid)
     ->execute();
 
@@ -649,7 +662,8 @@ function uc_attribute_delete($aid) {
  *   The attribute option object.
  */
 function uc_attribute_option_load($oid) {
-  return db_query("SELECT * FROM {uc_attribute_options} WHERE oid = :oid", [':oid' => $oid])->fetchObject();
+  $connection = \Drupal::database();
+  return $connection->query("SELECT * FROM {uc_attribute_options} WHERE oid = :oid", [':oid' => $oid])->fetchObject();
 }
 
 /**
@@ -658,8 +672,8 @@ function uc_attribute_option_load($oid) {
  * @param object $option
  *   The attribute option object to save.
  *
- * @return int
- *   The integer result from db_merge().
+ * @return \Drupal\Core\Database\StatementInterface|null
+ *   A prepared statement, or NULL if the query is not valid.
  */
 function uc_attribute_option_save(&$option) {
   $fields = [
@@ -671,15 +685,16 @@ function uc_attribute_option_save(&$option) {
     'ordering' => $option->ordering,
   ];
 
+  $connection = \Drupal::database();
   if (empty($option->oid)) {
-    $option->oid = db_insert('uc_attribute_options')
+    $option->oid = $connection->insert('uc_attribute_options')
       ->fields($fields)
       ->execute();
 
     return Merge::STATUS_INSERT;
   }
   else {
-    return db_merge('uc_attribute_options')
+    return $connection->merge('uc_attribute_options')
       ->key('oid', $option->oid)
       ->fields($fields)
       ->execute();
@@ -703,7 +718,8 @@ function uc_attribute_option_delete($oid) {
   uc_attribute_subject_option_delete($oid, 'product');
 
   // Delete base attributes and their options.
-  db_delete('uc_attribute_options')
+  $connection = \Drupal::database();
+  $connection->delete('uc_attribute_options')
     ->condition('oid', $oid)
     ->execute();
 
@@ -723,8 +739,8 @@ function uc_attribute_option_delete($oid) {
  * @param bool $save_options
  *   Save the product/class attribute's options, too?
  *
- * @return int
- *   The integer result from db_merge().
+ * @return \Drupal\Core\Database\StatementInterface|null
+ *   A prepared statement, or NULL if the query is not valid.
  */
 function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALSE) {
   $sql = uc_attribute_type_info($type);
@@ -753,7 +769,8 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
   // Ensure the attribute's ID property is set.
   $attribute->{$sql['id']} = $id;
 
-  return db_merge($sql['attr_table'])
+  $connection = \Drupal::database();
+  return $connection->merge($sql['attr_table'])
     ->keys([
       $sql['id'] => $id,
       'aid' => $attribute->aid,
@@ -785,13 +802,14 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
 function uc_attribute_subject_delete($aid, $type, $id = NULL) {
   $sql = uc_attribute_type_info($type);
 
-  $query = db_select('uc_attribute_options', 'a')
+  $connection = \Drupal::database();
+  $query = $connection->select('uc_attribute_options', 'a')
     ->fields('a', ['oid']);
   $query->join($sql['opt_table'], 'subject', 'a.oid = subject.oid');
 
   // Base conditions, and an ID check if necessary.
-  $conditions = db_and()
-    ->condition('aid', $aid);
+  $conditions = new Condition('AND');
+  $conditions->condition('aid', $aid);
   if ($id) {
     $conditions->condition($sql['id'], $id);
   }
@@ -803,7 +821,7 @@ function uc_attribute_subject_delete($aid, $type, $id = NULL) {
     // efficiency.
     uc_attribute_subject_option_delete($oid, $type, $id, FALSE);
   }
-  db_delete($sql['attr_table'])
+  $connection->delete($sql['attr_table'])
     ->condition($conditions)
     ->execute();
 
@@ -835,7 +853,8 @@ function uc_attribute_subject_delete($aid, $type, $id = NULL) {
 function uc_attribute_subject_option_load($oid, $type, $id) {
   $sql = uc_attribute_type_info($type);
 
-  $query = db_select($sql['opt_table'], 'po');
+  $connection = \Drupal::database();
+  $query = $connection->select($sql['opt_table'], 'po');
   $query->leftJoin('uc_attribute_options', 'ao', 'po.oid = ao.oid');
   $query->fields('po', [$sql['id'], 'oid', 'cost', 'price', 'weight', 'ordering'])
     ->fields('ao', ['name', 'aid'])
@@ -858,13 +877,14 @@ function uc_attribute_subject_option_load($oid, $type, $id) {
  * @param int $id
  *   The product/class ID.
  *
- * @return int
- *   The integer result from db_merge().
+ * @return \Drupal\Core\Database\StatementInterface|null
+ *   A prepared statement, or NULL if the query is not valid.
  */
 function uc_attribute_subject_option_save(&$option, $type, $id) {
   $sql = uc_attribute_type_info($type);
 
-  return db_merge($sql['opt_table'])
+  $connection = \Drupal::database();
+  return $connection->merge($sql['opt_table'])
     ->keys([
       $sql['id'] => $id,
       'oid' => $option->oid,
@@ -896,7 +916,8 @@ function uc_attribute_subject_option_delete($oid, $type, $id = NULL, $adjustment
   $sql = uc_attribute_type_info($type);
 
   // Delete the option.
-  $query = db_delete($sql['opt_table'])
+  $connection = \Drupal::database();
+  $query = $connection->delete($sql['opt_table'])
     ->condition('oid', $oid);
 
   // Base conditions, and an ID check if necessary.
@@ -939,11 +960,12 @@ function uc_attribute_adjustments_delete(array $fields) {
   }
 
   // Assemble the conditions and args for the SQL.
-  $query = db_delete('uc_product_adjustments');
+  $connection = \Drupal::database();
+  $query = $connection->delete('uc_product_adjustments');
 
   // If we have to match aid or oid...
   if ($match) {
-    $query->condition('combination', '%' . db_like($match) . '%', 'LIKE');
+    $query->condition('combination', '%' . $connection->escapeLike($match) . '%', 'LIKE');
   }
 
   // If we've got a node ID to match.
@@ -975,7 +997,8 @@ function uc_attribute_adjustments_delete(array $fields) {
  */
 function uc_attribute_subject_exists($aid, $type, $id) {
   $sql = uc_attribute_type_info($type);
-  $query = db_select($sql['attr_table'], 'a')
+  $connection = \Drupal::database();
+  $query = $connection->select($sql['attr_table'], 'a')
     ->fields('a', ['aid'])
     ->condition('aid', $aid)
     ->condition($sql['id'], $id);
@@ -1023,7 +1046,8 @@ function uc_attribute_type_info($type) {
 function uc_product_get_attributes($nid) {
   $attributes = [];
 
-  $result = db_query("SELECT upa.aid FROM {uc_product_attributes} upa LEFT JOIN {uc_attributes} ua ON upa.aid = ua.aid WHERE upa.nid = :nid ORDER BY upa.ordering, ua.name", [':nid' => $nid]);
+  $connection = \Drupal::database();
+  $result = $connection->query("SELECT upa.aid FROM {uc_product_attributes} upa LEFT JOIN {uc_attributes} ua ON upa.aid = ua.aid WHERE upa.nid = :nid ORDER BY upa.ordering, ua.name", [':nid' => $nid]);
   foreach ($result as $attribute) {
     $attributes[$attribute->aid] = uc_attribute_load($attribute->aid, $nid, 'product');
   }
@@ -1043,7 +1067,8 @@ function uc_product_get_attributes($nid) {
 function uc_class_get_attributes($pcid) {
   $attributes = [];
 
-  $result = db_query("SELECT uca.aid FROM {uc_class_attributes} uca LEFT JOIN {uc_attributes} ua ON uca.aid = ua.aid WHERE uca.pcid = :type ORDER BY uca.ordering, ua.name", [':type' => $pcid]);
+  $connection = \Drupal::database();
+  $result = $connection->query("SELECT uca.aid FROM {uc_class_attributes} uca LEFT JOIN {uc_attributes} ua ON uca.aid = ua.aid WHERE uca.pcid = :type ORDER BY uca.ordering, ua.name", [':type' => $pcid]);
   foreach ($result as $attribute) {
     $attributes[$attribute->aid] = uc_attribute_load($attribute->aid, $pcid, 'class');
   }
@@ -1346,7 +1371,8 @@ function _uc_attribute_display_types() {
  *   Array of attribute ids that have price affecting options.
  */
 function uc_attribute_priced_attributes($nid) {
-  $aids = db_query("SELECT DISTINCT (pa.aid) FROM {uc_product_attributes} pa INNER JOIN {uc_attribute_options} ao ON ao.aid = pa.aid INNER JOIN {uc_product_options} po ON (po.oid = ao.oid AND po.nid = pa.nid) WHERE pa.nid = :nid AND po.price <> :price AND pa.display <> :display", [':nid' => $nid, ':price' => 0, ':display' => 0])->fetchCol();
+  $connection = \Drupal::database();
+  $aids = $connection->query("SELECT DISTINCT (pa.aid) FROM {uc_product_attributes} pa INNER JOIN {uc_attribute_options} ao ON ao.aid = pa.aid INNER JOIN {uc_product_options} po ON (po.oid = ao.oid AND po.nid = pa.nid) WHERE pa.nid = :nid AND po.price <> :price AND pa.display <> :display", [':nid' => $nid, ':price' => 0, ':display' => 0])->fetchCol();
 
   return $aids;
 }

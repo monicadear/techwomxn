@@ -1,3 +1,7 @@
+/**
+ * @file
+ */
+
 (function ($, Drupal, drupalSettings) {
   'use strict';
   Drupal.viewsSlideshow = Drupal.viewsSlideshow || {};
@@ -6,7 +10,7 @@
   var error;
   var excludeMethods;
   /**
-   * Views Slideshow Controls
+   * Views Slideshow Controls.
    */
   Drupal.viewsSlideshowControls = Drupal.viewsSlideshowControls || {};
 
@@ -22,7 +26,7 @@
         Drupal[drupalSettings.viewsSlideshowControls[options.slideshowID].top.type].play(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -31,7 +35,7 @@
         Drupal[drupalSettings.viewsSlideshowControls[options.slideshowID].bottom.type].play(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
@@ -48,7 +52,7 @@
         Drupal[drupalSettings.viewsSlideshowControls[options.slideshowID].top.type].pause(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -57,21 +61,20 @@
         Drupal[drupalSettings.viewsSlideshowControls[options.slideshowID].bottom.type].pause(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
 
-
   /**
-   * Views Slideshow Text Controls
+   * Views Slideshow Text Controls.
    */
 
   // Add views slieshow api calls for views slideshow text controls.
   Drupal.behaviors.viewsSlideshowControlsText = {
     attach: function (context) {
 
-      // Process previous link
+      // Process previous link.
       $('.views_slideshow_controls_text_previous:not(.views-slideshow-controls-text-previous-processed)', context).addClass('views-slideshow-controls-text-previous-processed').each(function () {
         var uniqueID = $(this).attr('id').replace('views_slideshow_controls_text_previous_', '');
         $(this).click(function () {
@@ -80,7 +83,7 @@
         });
       });
 
-      // Process next link
+      // Process next link.
       $('.views_slideshow_controls_text_next:not(.views-slideshow-controls-text-next-processed)', context).addClass('views-slideshow-controls-text-next-processed').each(function () {
         var uniqueID = $(this).attr('id').replace('views_slideshow_controls_text_next_', '');
         $(this).click(function () {
@@ -89,7 +92,7 @@
         });
       });
 
-      // Process pause link
+      // Process pause link.
       $('.views_slideshow_controls_text_pause:not(.views-slideshow-controls-text-pause-processed)', context).addClass('views-slideshow-controls-text-pause-processed').each(function () {
         var uniqueID = $(this).attr('id').replace('views_slideshow_controls_text_pause_', '');
         $(this).click(function () {
@@ -140,7 +143,7 @@
   };
 
   /**
-   * Views Slideshow Pager
+   * Views Slideshow Pager.
    */
   Drupal.viewsSlideshowPager = Drupal.viewsSlideshowPager || {};
 
@@ -156,7 +159,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].top.type].transitionBegin(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -165,7 +168,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].bottom.type].transitionBegin(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
@@ -182,7 +185,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].top.type].goToSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -191,7 +194,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].bottom.type].goToSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
@@ -208,7 +211,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].top.type].previousSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -217,7 +220,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].bottom.type].previousSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
@@ -234,7 +237,7 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].top.type].nextSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
 
@@ -243,14 +246,13 @@
         Drupal[drupalSettings.viewsSlideshowPager[options.slideshowID].bottom.type].nextSlide(options);
       }
     }
-    catch(err) {
+    catch (err) {
       // Don't need to do anything on error.
     }
   };
 
-
   /**
-   * Views Slideshow Pager Fields
+   * Views Slideshow Pager Fields.
    */
 
   // Add views slieshow api calls for views slideshow pager fields.
@@ -303,11 +305,11 @@
   Drupal.viewsSlideshowPagerFields.transitionBegin = function (options) {
     for (pagerLocation in drupalSettings.viewsSlideshowPager[options.slideshowID]) {
       if (drupalSettings.viewsSlideshowPager[options.slideshowID]) {
-        // Remove active class from pagers
+        // Remove active class from pagers.
         $('[id^="views_slideshow_pager_field_item_' + pagerLocation + '_' + options.slideshowID + '"]').removeClass('active');
 
         // Add active class to active pager.
-        $('#views_slideshow_pager_field_item_'+ pagerLocation + '_' + options.slideshowID + '_' + options.slideNum).addClass('active');
+        $('#views_slideshow_pager_field_item_' + pagerLocation + '_' + options.slideshowID + '_' + options.slideNum).addClass('active');
       }
     }
   };
@@ -318,7 +320,7 @@
   Drupal.viewsSlideshowPagerFields.goToSlide = function (options) {
     for (pagerLocation in drupalSettings.viewsSlideshowPager[options.slideshowID]) {
       if (drupalSettings.viewsSlideshowPager[options.slideshowID]) {
-        // Remove active class from pagers
+        // Remove active class from pagers.
         $('[id^="views_slideshow_pager_field_item_' + pagerLocation + '_' + options.slideshowID + '"]').removeClass('active');
 
         // Add active class to active pager.
@@ -345,7 +347,7 @@
           pagerNum--;
         }
 
-        // Remove active class from pagers
+        // Remove active class from pagers.
         $('[id^="views_slideshow_pager_field_item_' + pagerLocation + '_' + options.slideshowID + '"]').removeClass('active');
 
         // Add active class to active pager.
@@ -371,7 +373,7 @@
           pagerNum = 0;
         }
 
-        // Remove active class from pagers
+        // Remove active class from pagers.
         $('[id^="views_slideshow_pager_field_item_' + pagerLocation + '_' + options.slideshowID + '"]').removeClass('active');
 
         // Add active class to active pager.
@@ -384,7 +386,7 @@
   Drupal.viewsSlideshowPagerBullets = Drupal.viewsSlideshowPagerFields || {};
 
   /**
-   * Views Slideshow Slide Counter
+   * Views Slideshow Slide Counter.
    */
 
   Drupal.viewsSlideshowSlideCounter = Drupal.viewsSlideshowSlideCounter || {};
@@ -409,7 +411,7 @@
     // If an action isn't specified return false.
     if (typeof options.action == 'undefined' || options.action === '') {
       status.value = false;
-      status.text =  Drupal.t('There was no action specified.');
+      status.text = Drupal.t('There was no action specified.');
       return error;
     }
 
@@ -455,13 +457,13 @@
         // Grab our list of methods.
         var methods = drupalSettings.viewsSlideshow[options.slideshowID]['methods'];
 
-        // if the calling method specified methods that shouldn't be called then
+        // If the calling method specified methods that shouldn't be called then
         // exclude calling them.
         var excludeMethodsObj = {};
         if (typeof options.excludeMethods !== 'undefined') {
           // We need to turn the excludeMethods array into an object so we can use the in
           // function.
-          for (var i=0; i < excludeMethods.length; i++) {
+          for (var i = 0; i < excludeMethods.length; i++) {
             excludeMethodsObj[excludeMethods[i]] = '';
           }
         }

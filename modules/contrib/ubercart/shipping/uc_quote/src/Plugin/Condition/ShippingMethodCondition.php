@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "uc_quote_condition_order_shipping_method",
  *   label = @Translation("Order has a shipping quote from a particular method"),
  *   category = @Translation("Order: Shipping Quote"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

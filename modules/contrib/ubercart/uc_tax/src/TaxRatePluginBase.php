@@ -63,13 +63,6 @@ abstract class TaxRatePluginBase extends PluginBase implements TaxRatePluginInte
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function calculateTax(OrderInterface $order) {
     return [];
   }

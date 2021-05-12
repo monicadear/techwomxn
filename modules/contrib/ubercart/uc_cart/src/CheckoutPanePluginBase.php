@@ -107,11 +107,4 @@ abstract class CheckoutPanePluginBase extends PluginBase implements CheckoutPane
     return (string) $this->pluginDefinition['title'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    return [];
-  }
-
 }

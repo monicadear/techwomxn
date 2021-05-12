@@ -7,6 +7,8 @@
  * Specifically downloading of required and optional JavaScript libraries.
  */
 
+use Drush\Drush;
+
 /**
  * Implements hook_drush_command().
  */
@@ -160,31 +162,31 @@ function _drush_views_slideshow_cycle_install_library($name, $path, $filename, $
   // Create the path if it does not exist.
   if (!is_dir($path)) {
     drush_op('mkdir', $path, 0755, TRUE);
-    drush_log(dt('Directory @path was created', ['@path' => $path]), 'success');
+    \Drupal::logger(dt('Directory @path was created', ['@path' => $path]), 'success');
   }
 
   // Be sure we can write in the directory.
   $perms = substr(sprintf('%o', fileperms($path)), -4);
   if ($perms !== '0755') {
-    drush_shell_exec('chmod 755 ' . $path);
+    Drush::process('chmod 755 ' . $path);
   }
 
   $dir = getcwd();
 
   // Download the JavaScript file.
   if (is_file($path . '/' . $filename)) {
-    drush_log(dt('@name appears to be already installed.', [
+    \Drupal::logger(dt('@name appears to be already installed.', [
       '@name' => $name,
     ]), 'ok');
   }
-  elseif (drush_op('chdir', $path) && drush_shell_exec('wget --no-check-certificate ' . $url)) {
-    drush_log(dt('The latest version of @name has been downloaded to @path', [
+  elseif (drush_op('chdir', $path) && Drush::process('wget --no-check-certificate ' . $url)) {
+    \Drupal::logger(dt('The latest version of @name has been downloaded to @path', [
       '@name' => $name,
       '@path' => $path,
     ]), 'success');
   }
   else {
-    drush_log(dt('Drush was unable to download the @name library to @path', [
+    \Drupal::logger(dt('Drush was unable to download the @name library to @path', [
       '@name' => $name,
       '@path' => $path,
     ]), 'error');
@@ -193,5 +195,5 @@ function _drush_views_slideshow_cycle_install_library($name, $path, $filename, $
   chdir($dir);
 
   // Restore the previous permissions.
-  drush_shell_exec('chmod ' . $perms . ' ' . $path);
+  Drush::process('chmod ' . $perms . ' ' . $path);
 }

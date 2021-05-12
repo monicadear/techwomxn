@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "uc_order_condition_has_product_class",
  *   label = @Translation("Check an order's product classes"),
  *   category = @Translation("Order: Product"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     ),

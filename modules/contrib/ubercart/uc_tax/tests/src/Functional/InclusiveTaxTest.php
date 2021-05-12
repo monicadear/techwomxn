@@ -11,7 +11,10 @@ use Drupal\node\Entity\Node;
  */
 class InclusiveTaxTest extends TaxTestBase {
 
-  public static $modules = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'uc_product_kit',
     'uc_attribute',
     'uc_cart',

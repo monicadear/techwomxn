@@ -12,8 +12,15 @@ use Drupal\Core\Cache\Cache;
  */
 class CatalogBlockTest extends CatalogTestBase {
 
-  public static $modules = ['uc_catalog', 'block'];
-  public static $adminPermissions = [
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['uc_catalog', 'block'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $adminPermissions = [
     'administer catalog',
     'view catalog',
     'administer blocks',

@@ -3,7 +3,7 @@
 namespace Drupal\views_slideshow\Tests\Plugin;
 
 use Drupal\views\Entity\View;
-use Drupal\views\Tests\Plugin\PluginTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views
  */
-class StyleSlideshowTest extends PluginTestBase {
+class StyleSlideshowTest extends ViewTestBase {
 
   /**
    * Modules to enable.

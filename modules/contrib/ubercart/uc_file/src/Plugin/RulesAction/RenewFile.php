@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *   id = "uc_file_order_renew",
  *   label = @Translation("Renew the files on an order"),
  *   category = @Translation("Renewal"),
- *   context = {
+ *   context_definitions = {
  *     "order" = @ContextDefinition("entity:uc_order",
  *       label = @Translation("Order")
  *     )

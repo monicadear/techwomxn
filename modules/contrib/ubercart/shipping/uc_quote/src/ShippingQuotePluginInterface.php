@@ -2,7 +2,7 @@
 
 namespace Drupal\uc_quote;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\uc_order\OrderInterface;
@@ -10,7 +10,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Defines an interface for shipping quote plugins.
  */
-interface ShippingQuotePluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface, PluginFormInterface {
+interface ShippingQuotePluginInterface extends PluginInspectionInterface, ConfigurableInterface, PluginFormInterface {
 
   /**
    * Returns a description of this shipping quote.

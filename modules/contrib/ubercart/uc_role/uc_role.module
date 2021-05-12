@@ -10,6 +10,7 @@
  * expire/need to be renewed/etc.
  */
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -44,12 +45,14 @@ function uc_role_cron() {
   $reminder_granularity = $roles_config->get('reminder_granularity');
   $reminder_qty = $roles_config->get('reminder_length');
 
-  $query = db_select('uc_roles_expirations', 'e')
+  $connection = \Drupal::database();
+  $query = $connection->select('uc_roles_expirations', 'e')
     ->fields('e');
-  $condition = db_or()
-    ->condition('e.expiration', \Drupal::time()->getRequestTime(), '<=');
+  $condition = new Condition('OR');
+  $condition->condition('e.expiration', \Drupal::time()->getRequestTime(), '<=');
   if ($reminder_granularity != 'never') {
-    $condition->condition(db_and()
+    $and = new Condition('AND');
+    $condition->condition($and
       ->isNull('e.notified')
       ->condition('e.expiration', _uc_role_get_expiration($reminder_qty, $reminder_granularity, \Drupal::time()->getRequestTime()), '<=')
     );
@@ -78,7 +81,7 @@ function uc_role_cron() {
       /* rules_invoke_event('uc_role_notify_reminder', $account, $expiration); */
       $event = new NotifyReminderEvent($account, $expiration);
       \Drupal::service('event_dispatcher')->dispatch($event::EVENT_NAME, $event);
-      db_update('uc_roles_expirations')
+      $connection->update('uc_roles_expirations')
         ->fields(['notified' => 1])
         ->condition('uid', $account->id())
         ->condition('rid', $expiration->rid)
@@ -158,7 +161,8 @@ function uc_role_form_user_profile_form_alter(&$form, FormStateInterface $form_s
   $form['uc_role']['expirations']['table']['#tree'] = TRUE;
 
   // Create the expirations table.
-  $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
+  $connection = \Drupal::database();
+  $expirations = $connection->query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
   foreach ($expirations as $expiration) {
     $form['uc_role']['expirations']['table'][$expiration->rid] = [
       'name' => [
@@ -318,7 +322,8 @@ function uc_role_user_view(array &$build, UserInterface $account, EntityViewDisp
       $user->isAuthenticated() &&
       (($user->id() == $account->id() && $show_expiration) || $user->hasPermission('view all role expirations')) ) {
 
-    $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
+    $connection = \Drupal::database();
+    $expirations = $connection->query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
     foreach ($expirations as $expiration) {
       $build['uc_role'][$expiration->rid] = [
         '#type' => 'item',
@@ -342,7 +347,8 @@ function uc_role_user_view(array &$build, UserInterface $account, EntityViewDisp
  * Implements hook_uc_order_product_can_ship().
  */
 function uc_role_uc_order_product_can_ship($product) {
-  $roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $product->nid->target_id]);
+  $connection = \Drupal::database();
+  $roles = $connection->query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $product->nid->target_id]);
   foreach ($roles as $role) {
     // If the model is empty, keep looking. (Everyone needs a role model...)
     if (empty($role->model)) {
@@ -450,7 +456,8 @@ function _uc_role_get_choices(array $exclude = []) {
  *   An Ubercart product feature ID.
  */
 function uc_role_feature_delete($pfid) {
-  db_delete('uc_roles_products')
+  $connection = \Drupal::database();
+  $connection->delete('uc_roles_products')
     ->condition('pfid', $pfid)
     ->execute();
 }
@@ -473,7 +480,8 @@ function uc_role_feature_delete($pfid) {
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_role_delete(UserInterface $account, $rid = NULL, $silent = FALSE) {
-  $query = db_delete('uc_roles_expirations')
+  $connection = \Drupal::database();
+  $query = $connection->delete('uc_roles_expirations')
     ->condition('uid', $account->id());
 
   if ($rid) {
@@ -520,7 +528,8 @@ function uc_role_revoke(UserInterface &$account, $rid, $silent = FALSE) {
   // Remove our record of the expiration.
   uc_role_delete($account, $rid, $silent);
 
-  $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
+  $connection = \Drupal::database();
+  $role_name = $connection->query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
 
   if (!$silent) {
     if (\Drupal::currentUser()->id() == $account->id()) {
@@ -572,8 +581,9 @@ function uc_role_grant(UserInterface &$account, $rid, $timestamp, $save_user = T
   }
 
   // If the role expires, keep a record.
+  $connection = \Drupal::database();
   if (!is_null($timestamp)) {
-    db_insert('uc_roles_expirations')
+    $connection->insert('uc_roles_expirations')
       ->fields([
         'uid' => $account->id(),
         'rid' => $rid,
@@ -584,7 +594,7 @@ function uc_role_grant(UserInterface &$account, $rid, $timestamp, $save_user = T
 
   // Display the message if appropriate.
   if (!$silent) {
-    $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
+    $role_name = $connection->query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
 
     if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('You have been granted the %role role.', ['%role' => $role_name]);
@@ -636,7 +646,8 @@ function uc_role_renew(UserInterface $account, $rid, $timestamp, $silent = FALSE
   }
 
   // Update the expiration date and reset the notified flag.
-  db_update('uc_roles_expirations')
+  $connection = \Drupal::database();
+  $connection->update('uc_roles_expirations')
     ->fields([
       'expiration' => $timestamp,
       'notified' => NULL,
@@ -646,7 +657,7 @@ function uc_role_renew(UserInterface $account, $rid, $timestamp, $silent = FALSE
     ->execute();
 
   if (!$silent) {
-    $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
+    $role_name = $connection->query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
     if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('Your %role role has been renewed. It will expire on %date.', [
         '%role' => $role_name,

@@ -12,11 +12,9 @@ use Drupal\rules\Context\ContextConfig;
 class FulfillmentRulesEventsTest extends FulfillmentTestBase {
 
   /**
-   * Additional modules required.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = ['rules'];
+  protected static $modules = ['rules'];
 
   /**
    * Reaction Rules entity storage.

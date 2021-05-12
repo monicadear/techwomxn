@@ -19,7 +19,7 @@ class PaymentEnteredEventTest extends EventTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Must enable our module to make our plugins discoverable.
@@ -32,7 +32,7 @@ class PaymentEnteredEventTest extends EventTestBase {
       ->willReturn(['uc_payment' => __DIR__ . '/../../../../../']);
 
     // Create a real plugin manager with a mock moduleHandler.
-    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal());
+    $this->eventManager = new RulesEventManager($this->moduleHandler->reveal(), $this->entityTypeBundleInfo->reveal());
   }
 
   /**
